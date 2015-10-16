@@ -4,6 +4,7 @@ package th.in.phompang.todobullet.fragment;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -87,6 +88,14 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 logoutUser();
+            }
+        });
+
+        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab1);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Wheeeeee", Toast.LENGTH_LONG).show();
             }
         });
 
