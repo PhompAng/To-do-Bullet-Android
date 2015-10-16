@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +16,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import th.in.phompang.todobullet.Player;
 import th.in.phompang.todobullet.R;
+import th.in.phompang.todobullet.helper.CustomAdapter;
 import th.in.phompang.todobullet.helper.SQLiteHandler;
 import th.in.phompang.todobullet.helper.SessionManager;
 
@@ -33,6 +39,10 @@ public class MainFragment extends Fragment {
     private SharedPreferences.Editor editor;
 
     private Activity mActivity;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
 
     /**
@@ -77,19 +87,29 @@ public class MainFragment extends Fragment {
         String email = user.get("email");
         String token = user.get("token");
 
-        TextView textView = (TextView) v.findViewById(R.id.text1);
 
-        textView.setText(token);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.recycle_view);
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new CustomAdapter(getActivity(), initPlayer());
+        mRecyclerView.setAdapter(mAdapter);
+
+        //TextView textView = (TextView) v.findViewById(R.id.text1);
+
+        //textView.setText(token);
 
         Toast.makeText(getActivity(), token, Toast.LENGTH_LONG).show();
 
-        Button logoutBtn = (Button) v.findViewById(R.id.logout);
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logoutUser();
-            }
-        });
+//        Button logoutBtn = (Button) v.findViewById(R.id.logout);
+//        logoutBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                logoutUser();
+//            }
+//        });
 
         FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab1);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +120,17 @@ public class MainFragment extends Fragment {
         });
 
         return v;
+    }
+
+
+    private List<Player> initPlayer() {
+        List<Player> dataset = new ArrayList<Player>();
+
+        for (int i = 0; i <= 100; i++) {
+            dataset.add(new Player(Integer.toString(i), "aaa"));
+        }
+
+        return dataset;
     }
 
     @Override

@@ -6,26 +6,32 @@
     android:layout_height="match_parent"
     tools:context="th.in.phompang.todobullet.fragment.MainFragment">
 
-    <TextView android:text="Hello World!" android:id="@+id/text1"
-        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycle_view"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logout"
-        android:id="@+id/logout"
-        android:layout_below="@+id/text1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="55dp" />
+    <!--<TextView android:text="Hello World!" android:id="@+id/text1"-->
+        <!--android:layout_width="wrap_content" android:layout_height="wrap_content" />-->
+
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Logout"-->
+        <!--android:id="@+id/logout"-->
+        <!--android:layout_below="@+id/text1"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="55dp" />-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab1"
         android:src="@drawable/ic_add_24dp"
-        app:fabSize="normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:elevation="3dp"/>
+        android:elevation="3dp"
+        app:fabSize="normal"/>
 
 </android.support.design.widget.CoordinatorLayout>
