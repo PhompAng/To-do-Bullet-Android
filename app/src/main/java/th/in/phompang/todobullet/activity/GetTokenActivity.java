@@ -3,10 +3,10 @@ package th.in.phompang.todobullet.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 import th.in.phompang.todobullet.R;
 
-public class GetTokenActivity extends AppCompatActivity {
+public class GetTokenActivity extends FragmentActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -45,10 +45,6 @@ public class GetTokenActivity extends AppCompatActivity {
             }
         });
         pushbullet.loadUrl("http://www.pushbullet.com/authorize?client_id=3w5GXegY7rSX812RYgt7E1AaKUXfw22m&redirect_uri=http%3A%2F%2F203.170.193.91&response_type=code&scope=everything");
-    }
-
-    public String getAccess_token() {
-        return access_token;
     }
 
     class MyJavaScriptInterface {
