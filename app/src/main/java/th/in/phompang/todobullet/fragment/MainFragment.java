@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.animators.adapters.ScaleInAnimationAdapter;
 import th.in.phompang.todobullet.R;
 import th.in.phompang.todobullet.Task;
 import th.in.phompang.todobullet.helper.TaskAdapter;
@@ -41,6 +42,8 @@ public class MainFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+
+    private List<Task> dataset;
 
 
     /**
@@ -92,27 +95,14 @@ public class MainFragment extends Fragment {
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new TaskAdapter(getActivity(), initTask());
+        mAdapter = new ScaleInAnimationAdapter(new TaskAdapter(getActivity(), initTask()));
         mRecyclerView.setAdapter(mAdapter);
-
-        //TextView textView = (TextView) v.findViewById(R.id.text1);
-
-        //textView.setText(token);
-
-        Toast.makeText(getActivity(), token, Toast.LENGTH_LONG).show();
-
-//        Button logoutBtn = (Button) v.findViewById(R.id.logout);
-//        logoutBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                logoutUser();
-//            }
-//        });
 
         FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab1);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                addItem();
                 Toast.makeText(getActivity(), "Wheeeeee", Toast.LENGTH_LONG).show();
             }
         });
@@ -120,11 +110,16 @@ public class MainFragment extends Fragment {
         return v;
     }
 
+    private void addItem() {
+        dataset.add(new Task("aaaaa", 1));
+        mAdapter.notifyDataSetChanged();
+    }
+
 
     private List<Task> initTask() {
-        List<Task> dataset = new ArrayList<Task>();
+        dataset = new ArrayList<Task>();
 
-        for (int i = 0; i <= 100; i++) {
+        for (int i = 0; i <= 1; i++) {
             dataset.add(new Task(Integer.toString(i), 1));
         }
 

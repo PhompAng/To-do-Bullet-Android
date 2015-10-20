@@ -34,14 +34,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             RecyclerView recycler_view_list = (RecyclerView) v.findViewById(R.id.recycle_view_list);
             recycler_view_list.setHasFixedSize(true);
 
-            //RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(v.getContext());
             LinearLayoutManager layoutManager = new org.solovyev.android.views.llm.LinearLayoutManager(v.getContext(), LinearLayoutManager.VERTICAL, false);
             recycler_view_list.setLayoutManager(layoutManager);
 
             RecyclerView.Adapter adapter = new TaskListAdapter(v.getContext(), initLst());
             recycler_view_list.setAdapter(adapter);
-
-
         }
 
         private List<TaskList> initLst() {
