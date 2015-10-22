@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +92,7 @@ public class MainFragment extends Fragment {
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recycle_view);
         mRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new GridLayoutManager(getActivity(), 2);
+        mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new ScaleInAnimationAdapter(new TaskAdapter(getActivity(), initTask()));
@@ -111,7 +111,7 @@ public class MainFragment extends Fragment {
     }
 
     private void addItem() {
-        dataset.add(new Task("aaaaa", 1));
+        dataset.add(new Task("aaaaa", Task.TYPE_TEXT));
         mAdapter.notifyDataSetChanged();
     }
 
@@ -119,9 +119,9 @@ public class MainFragment extends Fragment {
     private List<Task> initTask() {
         dataset = new ArrayList<Task>();
 
-        for (int i = 0; i <= 1; i++) {
-            dataset.add(new Task(Integer.toString(i), 1));
-        }
+        dataset.add(new Task("Type Text", Task.TYPE_TEXT));
+        dataset.add(new Task("Type List", Task.TYPE_LIST));
+        dataset.add(new Task("Type Image", Task.TYPE_IMAGE));
 
         return dataset;
     }

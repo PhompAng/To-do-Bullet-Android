@@ -11,15 +11,18 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_height="match_parent">
         <TextView
             android:id="@+id/lname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textColor="@color/colorPrimary"
-            android:textSize="24dp"/>
+            android:textSize="24sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"/>
     </RelativeLayout>
 
 

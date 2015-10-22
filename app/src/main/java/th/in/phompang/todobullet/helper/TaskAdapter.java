@@ -19,14 +19,23 @@ import th.in.phompang.todobullet.Task;
 /**
  * Created by Pichai Sivawat on 17/10/2558.
  */
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
-    private List<Task> mPlayer;
+public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private List<Task> mTask;
     private Context mContex;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class TextViewHolder extends RecyclerView.ViewHolder {
         public TextView mName;
 
-        public ViewHolder(View v) {
+        public TextViewHolder(View v) {
+            super(v);
+            mName = (TextView) v.findViewById(R.id.lname);
+        }
+    }
+
+    static class ListViewHolder extends RecyclerView.ViewHolder {
+        public TextView mName;
+
+        public ListViewHolder(View v) {
             super(v);
 
             mName = (TextView) v.findViewById(R.id.lname);
@@ -42,42 +51,76 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         }
 
         private List<TaskList> initLst() {
-            String[] data = new String[] {"test", "test1", "test2", "test3"};
+            String[] data = new String[] {"test", "test1", "test2", "test3", "test4", "test5"};
 
             List<TaskList> dataset = new ArrayList<>();
 
-            for (int i=0;i<4;i++) {
-                dataset.add(new TaskList(data[i].toString()));
+            for (int i=0;i<data.length;i++) {
+                dataset.add(new TaskList(data[i]));
             }
 
             return  dataset;
         }
     }
 
+    static class ImageViewHolder extends RecyclerView.ViewHolder {
+        public TextView mName;
+
+        public ImageViewHolder(View v) {
+            super(v);
+            mName = (TextView) v.findViewById(R.id.lname);
+        }
+    }
+
     public TaskAdapter(Context ctx, List<Task> dataset) {
-        mPlayer = dataset;
+        mTask = dataset;
         mContex = ctx;
     }
 
     @Override
-    public TaskAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContex).inflate(R.layout.recycle_view_list, parent, false);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(mContex);
 
-        ViewHolder viewHolder = new ViewHolder(v);
-
-        return viewHolder;
+        switch (viewType) {
+            case Task.TYPE_TEXT:
+                View textView = inflater.inflate(R.layout.recycle_view_text, parent, false);
+                return new TextViewHolder(textView);
+            case Task.TYPE_LIST:
+                View listView = inflater.inflate(R.layout.recycle_view_list, parent, false);
+                return new ListViewHolder(listView);
+            case Task.TYPE_IMAGE:default:
+                View imageView = inflater.inflate(R.layout.recycle_view_image, parent, false);
+                return new ImageViewHolder(imageView);
+        }
     }
 
     @Override
-    public void onBindViewHolder(TaskAdapter.ViewHolder holder, int position) {
-        Task task = mPlayer.get(position);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Task task = mTask.get(position);
 
-        holder.mName.setText(task.getTitle());
-
+        switch (holder.getItemViewType()) {
+            case Task.TYPE_TEXT:
+                TextViewHolder textViewHolder = (TextViewHolder) holder;
+                textViewHolder.mName.setText(task.getTitle());
+                break;
+            case Task.TYPE_LIST:
+                ListViewHolder listViewHolder = (ListViewHolder) holder;
+                listViewHolder.mName.setText(task.getTitle());
+                break;
+            case Task.TYPE_IMAGE:default:
+                ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
+                imageViewHolder.mName.setText(task.getTitle());
+                break;
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mPlayer.size();
+        return mTask.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return mTask.get(position).getType();
     }
 }

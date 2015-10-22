@@ -4,6 +4,10 @@ package th.in.phompang.todobullet;
  * Created by Pichai Sivawat on 20/10/2558.
  */
 public class Task {
+    public static final int TYPE_TEXT = 0;
+    public static final int TYPE_LIST = 1;
+    public static final int TYPE_IMAGE = 2;
+
     private String title;
     private int type;
 
