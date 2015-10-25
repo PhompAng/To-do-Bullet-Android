@@ -6,7 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,10 +68,12 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {
         public TextView mName;
+        public ImageView mImageView;
 
         public ImageViewHolder(View v) {
             super(v);
             mName = (TextView) v.findViewById(R.id.lname);
+            mImageView = (ImageView) v.findViewById(R.id.img_view);
         }
     }
 
@@ -110,6 +115,8 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case Task.TYPE_IMAGE:default:
                 ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
                 imageViewHolder.mName.setText(task.getTitle());
+
+                Glide.with(mContex).load("http://203.170.193.91:8000/img.jpg").fitCenter().centerCrop().into(imageViewHolder.mImageView);
                 break;
         }
     }
