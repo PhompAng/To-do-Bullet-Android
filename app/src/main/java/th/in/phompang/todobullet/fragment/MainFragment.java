@@ -2,9 +2,11 @@ package th.in.phompang.todobullet.fragment;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +33,7 @@ import th.in.phompang.todobullet.helper.SessionManager;
  * create an instance of this fragment.
  */
 public class MainFragment extends Fragment {
+    public static final int DIALOG_FRAGMENT = 1;
 
     private SQLiteHandler db;
     private SessionManager session;
@@ -70,6 +73,11 @@ public class MainFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -102,7 +110,7 @@ public class MainFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addItem();
+                showNewTaskDialog();
                 Toast.makeText(getActivity(), "Wheeeeee", Toast.LENGTH_LONG).show();
             }
         });
@@ -110,8 +118,27 @@ public class MainFragment extends Fragment {
         return v;
     }
 
-    private void addItem() {
-        dataset.add(new Task("aaaaa", Task.TYPE_TEXT));
+    private void showNewTaskDialog() {
+        DialogFragment dialogFragment = NewTaskDialogFragment.newInstance();
+        dialogFragment.setTargetFragment(this, DIALOG_FRAGMENT);
+        dialogFragment.show(getChildFragmentManager().beginTransaction(), "dialog");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case DIALOG_FRAGMENT:
+                if (resultCode == Activity.RESULT_OK) {
+                    addItem(data.getStringExtra("name"));
+                } else if (requestCode == Activity.RESULT_CANCELED) {
+                    // nothing to do here;
+                }
+                break;
+        }
+    }
+
+    private void addItem(String name) {
+        dataset.add(new Task(name, Task.TYPE_TEXT));
         mAdapter.notifyDataSetChanged();
     }
 
@@ -145,6 +172,4 @@ public class MainFragment extends Fragment {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, new LoginFragment().newInstance()).commit();
     }
-
-
 }
