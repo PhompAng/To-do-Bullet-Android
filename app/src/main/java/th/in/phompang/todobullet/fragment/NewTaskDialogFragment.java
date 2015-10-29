@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import th.in.phompang.todobullet.R;
@@ -28,6 +29,12 @@ public class NewTaskDialogFragment extends DialogFragment {
         NewTaskDialogFragment fragment = new NewTaskDialogFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     @Override
