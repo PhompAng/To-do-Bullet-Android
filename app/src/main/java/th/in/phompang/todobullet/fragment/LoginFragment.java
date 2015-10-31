@@ -222,6 +222,8 @@ public class LoginFragment extends Fragment {
     public void checkLogin(final String mEmail, final String mPassword) {
         String tag_string_req = "reg_login";
 
+        MainFragment.hideKeyboard(getContext());
+
         StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_LOGIN, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

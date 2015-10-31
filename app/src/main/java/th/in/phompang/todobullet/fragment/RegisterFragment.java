@@ -223,6 +223,8 @@ public class RegisterFragment extends Fragment {
     public void doSignUp(final String name, final String email, final String password) {
         String tag_str_req = "req_regis";
 
+        MainFragment.hideKeyboard(getContext());
+
         StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_REGISTER, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
