@@ -104,13 +104,6 @@ public class MainFragment extends Fragment {
             logoutUser();
         }
 
-        HashMap<String, String> user = db.getUserDeails();
-
-        String name = user.get("name");
-        String email = user.get("email");
-        String token = user.get("token");
-
-
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recycle_view);
         mRecyclerView.setHasFixedSize(true);
 
@@ -143,7 +136,7 @@ public class MainFragment extends Fragment {
         switch (requestCode) {
             case DIALOG_FRAGMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    addItem(data.getStringExtra("name"));
+                    addItem(data.getStringExtra("name"), 0);
                 } else if (requestCode == Activity.RESULT_CANCELED) {
                     // nothing to do here;
                 }
@@ -151,18 +144,20 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void addItem(String name) {
+    private void addItem(String name, int type) {
         dataset.add(new Task(name, Task.TYPE_TEXT));
+        db.addTask(name, "", type, "");
         mAdapter.notifyDataSetChanged();
     }
 
 
     private List<Task> initTask() {
         dataset = new ArrayList<Task>();
+        ArrayList<HashMap<String, String>> tasks = db.getTaskDeails();
 
-        dataset.add(new Task("Type Text", Task.TYPE_TEXT));
-        dataset.add(new Task("Type List", Task.TYPE_LIST));
-        dataset.add(new Task("Type Image", Task.TYPE_IMAGE));
+        for (HashMap<String, String> task: tasks) {
+            dataset.add(new Task(task.get("title"), Integer.parseInt(task.get("type"))));
+        }
 
         return dataset;
     }
@@ -177,6 +172,7 @@ public class MainFragment extends Fragment {
         session.setLogin(false);
 
         db.deleteUsers();
+        db.deleteTask();
         pref = mActivity.getSharedPreferences("token", 0);
         editor = pref.edit();
 
