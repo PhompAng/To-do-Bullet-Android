@@ -136,7 +136,7 @@ public class MainFragment extends Fragment {
         switch (requestCode) {
             case DIALOG_FRAGMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    addItem(data.getStringExtra("name"), 0);
+                    addItem(data.getStringExtra("name"), "", 0);
                 } else if (requestCode == Activity.RESULT_CANCELED) {
                     // nothing to do here;
                 }
@@ -144,9 +144,9 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void addItem(String name, int type) {
-        dataset.add(new Task(name, Task.TYPE_TEXT));
-        db.addTask(name, "", type, "");
+    private void addItem(String name, String description, int type) {
+        dataset.add(new Task(name, description, Task.TYPE_TEXT));
+        db.addTask(name, description, type, "");
         mAdapter.notifyDataSetChanged();
     }
 
@@ -156,7 +156,7 @@ public class MainFragment extends Fragment {
         ArrayList<HashMap<String, String>> tasks = db.getTaskDeails();
 
         for (HashMap<String, String> task: tasks) {
-            dataset.add(new Task(task.get("title"), Integer.parseInt(task.get("type"))));
+            dataset.add(new Task(task.get("title"), task.get("description"), Integer.parseInt(task.get("type"))));
         }
 
         return dataset;

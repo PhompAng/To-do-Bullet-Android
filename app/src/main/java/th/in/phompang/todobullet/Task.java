@@ -9,10 +9,12 @@ public class Task {
     public static final int TYPE_IMAGE = 2;
 
     private String title;
+    private String descripton;
     private int type;
 
-    public Task(String title, int type) {
+    public Task(String title, String descripton, int type) {
         this.title = title;
+        this.descripton = descripton;
         this.type = type;
     }
 
@@ -26,5 +28,13 @@ public class Task {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescripton() {
+        return descripton;
+    }
+
+    public void setDescripton(String descripton) {
+        this.descripton = descripton;
     }
 }
