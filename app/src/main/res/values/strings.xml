@@ -26,4 +26,8 @@
     </string>
     <string name="title_activity_register">Sign Up</string>
     <string name="btn_link_to_register">Not a member? Sign up now.</string>
+
+    <!-- String related to menu -->
+    <string name="action_save">Save</string>
+    <string name="title_activity_add_task">AddTaskActivity</string>
 </resources>

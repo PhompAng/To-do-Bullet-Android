@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +23,7 @@ import java.util.List;
 import jp.wasabeef.recyclerview.animators.adapters.ScaleInAnimationAdapter;
 import th.in.phompang.todobullet.R;
 import th.in.phompang.todobullet.Task;
+import th.in.phompang.todobullet.activity.AddTaskActivity;
 import th.in.phompang.todobullet.helper.TaskAdapter;
 import th.in.phompang.todobullet.helper.SQLiteHandler;
 import th.in.phompang.todobullet.helper.SessionManager;
@@ -118,7 +117,6 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showNewTaskDialog();
-                Toast.makeText(getActivity(), "Wheeeeee", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -126,9 +124,9 @@ public class MainFragment extends Fragment {
     }
 
     private void showNewTaskDialog() {
-        DialogFragment dialogFragment = NewTaskDialogFragment.newInstance();
-        dialogFragment.setTargetFragment(this, DIALOG_FRAGMENT);
-        dialogFragment.show(getChildFragmentManager().beginTransaction(), "dialog");
+        Intent intent = new Intent(getContext(), AddTaskActivity.class);
+        startActivity(intent);
+
     }
 
     @Override
