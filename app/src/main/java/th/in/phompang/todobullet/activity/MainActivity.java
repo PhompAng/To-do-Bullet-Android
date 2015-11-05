@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import th.in.phompang.todobullet.R;
 import th.in.phompang.todobullet.fragment.GetTokenFragment;
@@ -40,8 +41,18 @@ public class MainActivity extends AppCompatActivity {
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         setupDrawerContent(nvDrawer);
 
+        Bundle extra = getIntent().getExtras();
+        MainFragment mainFragment = MainFragment.newInstance();
+        if (extra != null) {
+            //Toast.makeText(this, extra.getString("title", "null"), Toast.LENGTH_LONG).show();
+            Bundle bundle = new Bundle();
+            bundle.putString("title", extra.getString("title"));
+
+            mainFragment.setArguments(bundle);
+        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, new MainFragment().newInstance()).commit();
+        fragmentManager.beginTransaction().replace(R.id.flContent, mainFragment).commit();
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {

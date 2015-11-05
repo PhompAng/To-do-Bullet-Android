@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+//import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -112,13 +115,17 @@ public class MainFragment extends Fragment {
         mAdapter = new ScaleInAnimationAdapter(new TaskAdapter(getActivity(), initTask()));
         mRecyclerView.setAdapter(mAdapter);
 
-        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab1);
-        fab.setOnClickListener(new View.OnClickListener() {
+        final View actionB = v.findViewById(R.id.new_task_text);
+        actionB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showNewTaskDialog();
             }
         });
+
+        if (getArguments().getString("title") != null) {
+            addItem(getArguments().getString("title"), "", 0);
+        }
 
         return v;
     }
@@ -126,7 +133,6 @@ public class MainFragment extends Fragment {
     private void showNewTaskDialog() {
         Intent intent = new Intent(getContext(), AddTaskActivity.class);
         startActivity(intent);
-
     }
 
     @Override
@@ -142,9 +148,9 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void addItem(String name, String description, int type) {
-        dataset.add(new Task(name, description, Task.TYPE_TEXT));
-        db.addTask(name, description, type, "");
+    private void addItem(String title, String description, int type) {
+        dataset.add(new Task(title, description, Task.TYPE_TEXT));
+        db.addTask(title, description, type, "");
         mAdapter.notifyDataSetChanged();
     }
 

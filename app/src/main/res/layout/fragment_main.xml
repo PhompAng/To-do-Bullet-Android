@@ -24,14 +24,41 @@
         <!--android:layout_centerHorizontal="true"-->
         <!--android:layout_marginTop="55dp" />-->
 
-    <android.support.design.widget.FloatingActionButton
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/fab1"
-        android:src="@drawable/ic_add_24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:elevation="3dp"
-        app:fabSize="normal"/>
+        app:fabSize="normal"
+        app:fab_labelStyle="@style/menu_labels_style"
+        app:fab_icon="@drawable/ic_add_24dp">
+        <!-- TODO app:fab_colorPressed="@color/white_pressed" -->
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/new_task_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_subject_24dp"
+            app:fab_colorNormal="@color/white"
+            app:fab_size="mini"
+            app:fab_title="Text"/>
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/new_task_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_format_list_bulleted_24dp"
+            app:fab_colorNormal="@color/white"
+            app:fab_size="mini"
+            app:fab_title="List"/>
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/new_task_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_photo_library_24dp"
+            app:fab_colorNormal="@color/white"
+            app:fab_size="mini"
+            app:fab_title="Image"/>
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </android.support.design.widget.CoordinatorLayout>
