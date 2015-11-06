@@ -2,6 +2,7 @@ package th.in.phompang.todobullet.fragment;
 
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -107,6 +108,9 @@ public class NewTaskText extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_save:
                 validate();
+                return true;
+            case R.id.action_palette:
+                //TODO change task color
                 return true;
         }
 
