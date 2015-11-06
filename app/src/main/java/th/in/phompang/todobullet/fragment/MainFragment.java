@@ -115,11 +115,19 @@ public class MainFragment extends Fragment {
         mAdapter = new ScaleInAnimationAdapter(new TaskAdapter(getActivity(), initTask()));
         mRecyclerView.setAdapter(mAdapter);
 
-        final View actionB = v.findViewById(R.id.new_task_text);
-        actionB.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton new_task_text = (FloatingActionButton) v.findViewById(R.id.new_task_text);
+        new_task_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showNewTaskDialog();
+                showNewTaskDialog(0);
+            }
+        });
+
+        FloatingActionButton new_task_list = (FloatingActionButton) v.findViewById(R.id.new_task_list);
+        new_task_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNewTaskDialog(1);
             }
         });
 
@@ -130,8 +138,16 @@ public class MainFragment extends Fragment {
         return v;
     }
 
-    private void showNewTaskDialog() {
+    private void showNewTaskDialog(int type) {
         Intent intent = new Intent(getContext(), AddTaskActivity.class);
+        switch (type) {
+            case 0:
+                intent.putExtra("type", 0);
+                break;
+            case 1:
+                intent.putExtra("type", 1);
+                break;
+        }
         startActivity(intent);
     }
 

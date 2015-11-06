@@ -1,17 +1,18 @@
 package th.in.phompang.todobullet.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import th.in.phompang.todobullet.R;
-import th.in.phompang.todobullet.fragment.NewTaskText;
+import th.in.phompang.todobullet.fragment.NewTaskListFragment;
+import th.in.phompang.todobullet.fragment.NewTaskTextFragment;
 
-public class AddTaskActivity extends AppCompatActivity implements NewTaskText.OnSaveSelectedListener {
+public class AddTaskActivity extends AppCompatActivity implements NewTaskTextFragment.OnSaveSelectedListener, NewTaskListFragment.OnSaveSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,16 @@ public class AddTaskActivity extends AppCompatActivity implements NewTaskText.On
 //        collapsingToolbarLayout.setTitle(" ");
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, new NewTaskText().newInstance()).commit();
+        Bundle extra = getIntent().getExtras();
+        switch (extra.getInt("type")) {
+            case 0:
+                fragmentManager.beginTransaction().replace(R.id.flContent, new NewTaskTextFragment().newInstance()).commit();
+                break;
+            case 1:
+                fragmentManager.beginTransaction().replace(R.id.flContent, new NewTaskListFragment().newInstance()).commit();
+        }
+
+
     }
 //
 //    @Override
@@ -48,10 +58,15 @@ public class AddTaskActivity extends AppCompatActivity implements NewTaskText.On
     }
 
     @Override
-    public void onArticleSelected(String title) {
+    public void onNewTaskText(String title) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("title", title);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onNewTaskList(Uri uri) {
+
     }
 }

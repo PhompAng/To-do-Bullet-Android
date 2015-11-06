@@ -2,7 +2,6 @@ package th.in.phompang.todobullet.fragment;
 
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -18,15 +17,15 @@ import th.in.phompang.todobullet.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link NewTaskText#newInstance} factory method to
+ * Use the {@link NewTaskTextFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewTaskText extends Fragment {
+public class NewTaskTextFragment extends Fragment {
 
     OnSaveSelectedListener mCallback;
 
     public interface OnSaveSelectedListener {
-        public void onArticleSelected(String title);
+        public void onNewTaskText(String title);
     }
 
     private EditText title;
@@ -35,17 +34,17 @@ public class NewTaskText extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment NewTaskText.
+     * @return A new instance of fragment NewTaskTextFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NewTaskText newInstance() {
-        NewTaskText fragment = new NewTaskText();
+    public static NewTaskTextFragment newInstance() {
+        NewTaskTextFragment fragment = new NewTaskTextFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public NewTaskText() {
+    public NewTaskTextFragment() {
         // Required empty public constructor
     }
 
@@ -58,9 +57,9 @@ public class NewTaskText extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_add_task_text, container, false);
+        View v = inflater.inflate(R.layout.fragment_new_task_text, container, false);
 
-        title = (EditText) v.findViewById(R.id.new_task_title);
+        title = (EditText) v.findViewById(R.id.new_task_text_title);
 
         return v;
     }
@@ -94,7 +93,7 @@ public class NewTaskText extends Fragment {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            mCallback.onArticleSelected(title.getText().toString());
+            mCallback.onNewTaskText(title.getText().toString());
         }
     }
 

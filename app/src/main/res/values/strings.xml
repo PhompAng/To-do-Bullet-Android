@@ -34,4 +34,7 @@
 
     <!-- String related to new task -->
     <string name="prompt_title">Title</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
