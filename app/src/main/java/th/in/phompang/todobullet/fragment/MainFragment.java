@@ -6,26 +6,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-//import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import jp.wasabeef.recyclerview.animators.adapters.ScaleInAnimationAdapter;
 import th.in.phompang.todobullet.R;
 import th.in.phompang.todobullet.Task;
+import th.in.phompang.todobullet.TaskList;
 import th.in.phompang.todobullet.activity.AddTaskActivity;
 import th.in.phompang.todobullet.helper.TaskAdapter;
 import th.in.phompang.todobullet.helper.SQLiteHandler;
@@ -50,7 +53,7 @@ public class MainFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private List<Task> dataset;
+    private ArrayList<Task> dataset;
 
     public static void hideKeyboard(Context ctx) {
         InputMethodManager inputManager = (InputMethodManager) ctx
@@ -131,8 +134,21 @@ public class MainFragment extends Fragment {
             }
         });
 
-        if (getArguments().getString("title") != null) {
-            addItem(getArguments().getString("title"), "", 0);
+        if (!getArguments().isEmpty()) {
+            Bundle arg = getArguments();
+            switch (arg.getInt("type", -1)) {
+                case 0:
+                    Log.d("arg", Integer.toString(arg.getInt("type")));
+                    addItem(arg.getString("title"), "", 0);
+                    break;
+                case 1:
+                    ArrayList<TaskList> lst = arg.getParcelableArrayList("list");
+                    addItem(arg.getString("title"), lst, 1);
+                    break;
+                default:
+                    break;
+            }
+
         }
 
         return v;
@@ -170,13 +186,51 @@ public class MainFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
+    private void addItem(String title, ArrayList<TaskList> lst, int type) {
+        dataset.add(new Task(title, lst, Task.TYPE_LIST));
 
-    private List<Task> initTask() {
+        Gson gson = new Gson();
+        String arrayList = gson.toJson(lst);
+        Log.d("arrayList", arrayList);
+
+        db.addTask(title, arrayList, type, "");
+
+        mAdapter.notifyDataSetChanged();
+    }
+
+
+    private ArrayList<Task> initTask() {
         dataset = new ArrayList<Task>();
         ArrayList<HashMap<String, String>> tasks = db.getTaskDeails();
 
         for (HashMap<String, String> task: tasks) {
-            dataset.add(new Task(task.get("title"), task.get("description"), Integer.parseInt(task.get("type"))));
+            int type = Integer.parseInt(task.get("type"));
+            switch (type) {
+                case 0:
+                    dataset.add(new Task(task.get("title"), task.get("description"), type));
+                    break;
+                case 1:
+                    ArrayList<TaskList> lst = new ArrayList<>();
+
+                    Gson gson = new Gson();
+                    JsonParser parser = new JsonParser();
+                    JsonArray jArray = parser.parse(task.get("description")).getAsJsonArray();
+
+                    for(JsonElement obj : jArray )
+                    {
+                        TaskList tl = gson.fromJson(obj , TaskList.class);
+                        lst.add(tl);
+                    }
+
+                    for (TaskList t:
+                            lst) {
+                        Log.d("finalOutputString", t.getName());
+                    }
+
+                    dataset.add(new Task(task.get("title"), lst, type));
+                    break;
+            }
+
         }
 
         return dataset;

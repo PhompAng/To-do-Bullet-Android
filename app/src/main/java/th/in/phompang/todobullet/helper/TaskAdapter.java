@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import th.in.phompang.todobullet.TaskList;
 import th.in.phompang.todobullet.R;
@@ -23,7 +22,7 @@ import th.in.phompang.todobullet.Task;
  * Created by Pichai Sivawat on 17/10/2558.
  */
 public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<Task> mTask;
+    private ArrayList<Task> mTask;
     private Context mContex;
 
     static class TextViewHolder extends RecyclerView.ViewHolder {
@@ -38,31 +37,29 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static class ListViewHolder extends RecyclerView.ViewHolder {
         public TextView mName;
 
+        public RecyclerView.Adapter adapter;
+        public RecyclerView recycler_view_list;
+
+        public ArrayList<TaskList> dataset;
+
         public ListViewHolder(View v) {
             super(v);
 
             mName = (TextView) v.findViewById(R.id.lname);
 
-            RecyclerView recycler_view_list = (RecyclerView) v.findViewById(R.id.recycle_view_list);
+            recycler_view_list = (RecyclerView) v.findViewById(R.id.recycle_view_list);
             recycler_view_list.setHasFixedSize(true);
 
             LinearLayoutManager layoutManager = new org.solovyev.android.views.llm.LinearLayoutManager(v.getContext(), LinearLayoutManager.VERTICAL, false);
             recycler_view_list.setLayoutManager(layoutManager);
 
-            RecyclerView.Adapter adapter = new TaskListAdapter(v.getContext(), initLst());
+            adapter = new TaskListAdapter(v.getContext(), init());
             recycler_view_list.setAdapter(adapter);
         }
 
-        private List<TaskList> initLst() {
-            String[] data = new String[] {"test", "test1", "test2", "test3", "test4", "test5"};
-
-            List<TaskList> dataset = new ArrayList<>();
-
-            for (int i=0;i<data.length;i++) {
-                dataset.add(new TaskList(data[i]));
-            }
-
-            return  dataset;
+        public ArrayList<TaskList> init() {
+            dataset = new ArrayList<>();
+            return dataset;
         }
     }
 
@@ -77,7 +74,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    public TaskAdapter(Context ctx, List<Task> dataset) {
+    public TaskAdapter(Context ctx, ArrayList<Task> dataset) {
         mTask = dataset;
         mContex = ctx;
     }
@@ -111,6 +108,10 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case Task.TYPE_LIST:
                 ListViewHolder listViewHolder = (ListViewHolder) holder;
                 listViewHolder.mName.setText(task.getTitle());
+
+                //listViewHolder.dataset = task.getDataset();
+                RecyclerView.Adapter adapter = new TaskListAdapter(mContex, task.getDataset());
+                listViewHolder.recycler_view_list.setAdapter(adapter);
                 break;
             case Task.TYPE_IMAGE:default:
                 ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
@@ -130,4 +131,5 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemViewType(int position) {
         return mTask.get(position).getType();
     }
+
 }

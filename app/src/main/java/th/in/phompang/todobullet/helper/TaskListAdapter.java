@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import th.in.phompang.todobullet.TaskList;
 import th.in.phompang.todobullet.R;
@@ -17,7 +17,7 @@ import th.in.phompang.todobullet.R;
  */
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHolder> {
 
-    private List<TaskList> mList;
+    private ArrayList<TaskList> mList;
     private Context mContext;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -30,7 +30,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
         }
     }
 
-    public TaskListAdapter(Context ctx, List<TaskList> taskList) {
+    public TaskListAdapter(Context ctx, ArrayList<TaskList> taskList) {
         mList = taskList;
         mContext = ctx;
     }

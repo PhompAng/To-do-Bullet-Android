@@ -1,6 +1,5 @@
 package th.in.phompang.todobullet.fragment;
 
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,7 +24,7 @@ public class NewTaskTextFragment extends Fragment {
     OnSaveSelectedListener mCallback;
 
     public interface OnSaveSelectedListener {
-        public void onNewTaskText(String title);
+        public void onNewTaskText(String title, int type);
     }
 
     private EditText title;
@@ -93,7 +92,7 @@ public class NewTaskTextFragment extends Fragment {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            mCallback.onNewTaskText(title.getText().toString());
+            mCallback.onNewTaskText(title.getText().toString(), 0);
         }
     }
 
@@ -115,6 +114,4 @@ public class NewTaskTextFragment extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
-
-
 }

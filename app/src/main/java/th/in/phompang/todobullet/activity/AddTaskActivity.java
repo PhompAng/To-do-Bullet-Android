@@ -1,14 +1,16 @@
 package th.in.phompang.todobullet.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 import th.in.phompang.todobullet.R;
+import th.in.phompang.todobullet.TaskList;
 import th.in.phompang.todobullet.fragment.NewTaskListFragment;
 import th.in.phompang.todobullet.fragment.NewTaskTextFragment;
 
@@ -58,15 +60,21 @@ public class AddTaskActivity extends AppCompatActivity implements NewTaskTextFra
     }
 
     @Override
-    public void onNewTaskText(String title) {
+    public void onNewTaskText(String title, int type) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("title", title);
+        intent.putExtra("type", type);
         startActivity(intent);
         finish();
     }
 
     @Override
-    public void onNewTaskList(Uri uri) {
-
+    public void onNewTaskList(String title, ArrayList<TaskList> lst, int type) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("title", title);
+        intent.putParcelableArrayListExtra("list", lst);
+        intent.putExtra("type", type);
+        startActivity(intent);
+        finish();
     }
 }
