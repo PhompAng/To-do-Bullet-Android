@@ -139,7 +139,7 @@ public class MainFragment extends Fragment {
             switch (arg.getInt("type", -1)) {
                 case 0:
                     Log.d("arg", Integer.toString(arg.getInt("type")));
-                    addItem(arg.getString("title"), "", 0);
+                    addItem(arg.getString("title"), arg.getString("description"), 0);
                     break;
                 case 1:
                     ArrayList<TaskList> lst = arg.getParcelableArrayList("list");

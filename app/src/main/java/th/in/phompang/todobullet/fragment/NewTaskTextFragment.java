@@ -24,10 +24,11 @@ public class NewTaskTextFragment extends Fragment {
     OnSaveSelectedListener mCallback;
 
     public interface OnSaveSelectedListener {
-        public void onNewTaskText(String title, int type);
+        public void onNewTaskText(String title, String description, int type);
     }
 
     private EditText title;
+    private EditText description;
 
     /**
      * Use this factory method to create a new instance of
@@ -59,6 +60,7 @@ public class NewTaskTextFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_new_task_text, container, false);
 
         title = (EditText) v.findViewById(R.id.new_task_text_title);
+        description = (EditText) v.findViewById(R.id.new_task_text_description);
 
         return v;
     }
@@ -92,7 +94,7 @@ public class NewTaskTextFragment extends Fragment {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            mCallback.onNewTaskText(title.getText().toString(), 0);
+            mCallback.onNewTaskText(title.getText().toString(), description.getText().toString(), 0);
         }
     }
 

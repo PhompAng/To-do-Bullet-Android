@@ -21,8 +21,19 @@
             android:textSize="24sp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:paddingTop="24dp"
-            android:paddingBottom="24dp"/>
+            android:paddingTop="24dp"/>
+        <TextView
+            android:id="@+id/ldes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="24dp"
+            android:layout_below="@+id/lname"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
 
 

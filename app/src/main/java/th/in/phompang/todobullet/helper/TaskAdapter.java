@@ -3,6 +3,7 @@ package th.in.phompang.todobullet.helper;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +28,12 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static class TextViewHolder extends RecyclerView.ViewHolder {
         public TextView mName;
+        public TextView mDes;
 
         public TextViewHolder(View v) {
             super(v);
             mName = (TextView) v.findViewById(R.id.lname);
+            mDes = (TextView) v.findViewById(R.id.ldes);
         }
     }
 
@@ -104,6 +107,12 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case Task.TYPE_TEXT:
                 TextViewHolder textViewHolder = (TextViewHolder) holder;
                 textViewHolder.mName.setText(task.getTitle());
+                if (task.getDescripton().isEmpty()) {
+                    textViewHolder.mDes.setVisibility(View.GONE);
+                    textViewHolder.mName.setPadding(dp2px(16), dp2px(24), dp2px(16), dp2px(24));
+                } else {
+                    textViewHolder.mDes.setText(task.getDescripton());
+                }
                 break;
             case Task.TYPE_LIST:
                 ListViewHolder listViewHolder = (ListViewHolder) holder;
@@ -130,6 +139,12 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         return mTask.get(position).getType();
+    }
+
+    public int dp2px(int dp) {
+        float scale = mContex.getResources().getDisplayMetrics().density;
+        int dpAsPixels = (int) (dp*scale + 0.5f);
+        return dpAsPixels;
     }
 
 }

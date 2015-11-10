@@ -60,9 +60,10 @@ public class AddTaskActivity extends AppCompatActivity implements NewTaskTextFra
     }
 
     @Override
-    public void onNewTaskText(String title, int type) {
+    public void onNewTaskText(String title, String description, int type) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("title", title);
+        intent.putExtra("description", description);
         intent.putExtra("type", type);
         startActivity(intent);
         finish();
