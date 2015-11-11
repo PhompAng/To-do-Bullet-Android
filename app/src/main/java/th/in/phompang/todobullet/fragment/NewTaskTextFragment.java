@@ -1,16 +1,25 @@
 package th.in.phompang.todobullet.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import th.in.phompang.todobullet.R;
 
@@ -21,14 +30,19 @@ import th.in.phompang.todobullet.R;
  */
 public class NewTaskTextFragment extends Fragment {
 
+    public static final int DATEPICKER_FRAGMENT = 1;
+
     OnSaveSelectedListener mCallback;
 
     public interface OnSaveSelectedListener {
         public void onNewTaskText(String title, String description, int type);
     }
 
+    private ArrayList<String> date_data;
+
     private EditText title;
     private EditText description;
+    private Spinner date;
 
     /**
      * Use this factory method to create a new instance of
@@ -61,7 +75,27 @@ public class NewTaskTextFragment extends Fragment {
 
         title = (EditText) v.findViewById(R.id.new_task_text_title);
         description = (EditText) v.findViewById(R.id.new_task_text_description);
+        date = (Spinner) v.findViewById(R.id.date);
 
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, initdateArray());
+        date.setAdapter(arrayAdapter);
+
+        date.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == date_data.size()-1) {
+                    Toast.makeText(getContext(), date_data.get(position), Toast.LENGTH_LONG).show();
+                    DialogFragment datefragment = DatePickerFragment.newInstance();
+                    datefragment.setTargetFragment(NewTaskTextFragment.this, DATEPICKER_FRAGMENT);
+                    datefragment.show(getFragmentManager().beginTransaction(), "datepicker");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         return v;
     }
 
@@ -77,6 +111,16 @@ public class NewTaskTextFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnHeadlineSelectedListener");
         }
+    }
+
+    public ArrayList<String> initdateArray() {
+        date_data = new ArrayList<>();
+        date_data.add("Today");
+        date_data.add("Tomorrow");
+        date_data.add("Next week");
+        date_data.add("Pick a date...");
+
+        return date_data;
     }
 
     public void validate() {
@@ -115,5 +159,18 @@ public class NewTaskTextFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        switch (requestCode) {
+            case DATEPICKER_FRAGMENT:
+                if (resultCode == Activity.RESULT_OK) {
+                    int year = intent.getIntExtra("year", 0);
+                    int month = intent.getIntExtra("month", 0);
+                    int date = intent.getIntExtra("date", 0);
+                    Toast.makeText(getContext(), Integer.toString(year) + Integer.toString(month) + Integer.toString(date), Toast.LENGTH_LONG).show();
+                }
+        }
     }
 }

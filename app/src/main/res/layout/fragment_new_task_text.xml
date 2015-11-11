@@ -36,6 +36,11 @@
                 android:gravity="top|left"
                 android:scrollbars="vertical"/>
         </android.support.design.widget.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </FrameLayout>
