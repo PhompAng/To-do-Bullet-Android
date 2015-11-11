@@ -13,18 +13,21 @@ public class Task implements Serializable {
 
     private String title;
     private String descripton;
+    private String datetime;
     private ArrayList<TaskList> dataset;
     private int type;
 
-    public Task(String title, String descripton, int type) {
+    public Task(String title, String descripton, String datetime, int type) {
         this.title = title;
         this.descripton = descripton;
+        this.datetime = datetime;
         this.type = type;
     }
 
-    public Task(String title, ArrayList<TaskList> lst, int type) {
+    public Task(String title, ArrayList<TaskList> lst, String datetime, int type) {
         this.title = title;
         this.dataset = lst;
+        this.datetime = datetime;
         this.type = type;
     }
 
@@ -50,5 +53,13 @@ public class Task implements Serializable {
 
     public ArrayList<TaskList> getDataset() {
         return dataset;
+    }
+
+    public String getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
     }
 }

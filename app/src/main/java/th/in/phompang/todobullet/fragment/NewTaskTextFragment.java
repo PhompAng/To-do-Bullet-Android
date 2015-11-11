@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,10 +31,12 @@ public class NewTaskTextFragment extends Fragment {
 
     public static final int DATEPICKER_FRAGMENT = 1;
 
+    public String datetime = "";
+
     OnSaveSelectedListener mCallback;
 
     public interface OnSaveSelectedListener {
-        public void onNewTaskText(String title, String description, int type);
+        public void onNewTaskText(String title, String description, String datetime, int type);
     }
 
     private ArrayList<String> date_data;
@@ -83,7 +84,7 @@ public class NewTaskTextFragment extends Fragment {
         date.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == date_data.size()-1) {
+                if (position == date_data.size() - 1) {
                     DialogFragment datefragment = DatePickerFragment.newInstance();
                     datefragment.setTargetFragment(NewTaskTextFragment.this, DATEPICKER_FRAGMENT);
                     datefragment.show(getFragmentManager().beginTransaction(), "datepicker");
@@ -122,6 +123,14 @@ public class NewTaskTextFragment extends Fragment {
         return date_data;
     }
 
+    public String getDatetime() {
+        return this.datetime;
+    }
+
+    public void setDateTime(String datetime) {
+        this.datetime = datetime;
+    }
+
     public void validate() {
         title.setError(null);
 
@@ -137,7 +146,7 @@ public class NewTaskTextFragment extends Fragment {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            mCallback.onNewTaskText(title.getText().toString(), description.getText().toString(), 0);
+            mCallback.onNewTaskText(title.getText().toString(), description.getText().toString(), getDatetime(), 0);
         }
     }
 
@@ -165,10 +174,11 @@ public class NewTaskTextFragment extends Fragment {
         switch (requestCode) {
             case DATEPICKER_FRAGMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    int year = intent.getIntExtra("year", 0);
-                    int month = intent.getIntExtra("month", 0);
-                    int date = intent.getIntExtra("date", 0);
-                    Toast.makeText(getContext(), Integer.toString(year) + Integer.toString(month) + Integer.toString(date), Toast.LENGTH_LONG).show();
+                    String year = Integer.toString(intent.getIntExtra("year", 0));
+                    String month = String.format("%02d", intent.getIntExtra("month", 0));
+                    String date = String.format("%02d", intent.getIntExtra("date", 0));
+                    Toast.makeText(getContext(), year+month+date, Toast.LENGTH_LONG).show();
+                    setDateTime(year+"-"+month+"-"+date);
                 }
         }
     }

@@ -60,20 +60,22 @@ public class AddTaskActivity extends AppCompatActivity implements NewTaskTextFra
     }
 
     @Override
-    public void onNewTaskText(String title, String description, int type) {
+    public void onNewTaskText(String title, String description, String datetime, int type) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("title", title);
         intent.putExtra("description", description);
+        intent.putExtra("datetime", datetime);
         intent.putExtra("type", type);
         startActivity(intent);
         finish();
     }
 
     @Override
-    public void onNewTaskList(String title, ArrayList<TaskList> lst, int type) {
+    public void onNewTaskList(String title, ArrayList<TaskList> lst, String datetime, int type) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("title", title);
         intent.putParcelableArrayListExtra("list", lst);
+        intent.putExtra("datetime", datetime);
         intent.putExtra("type", type);
         startActivity(intent);
         finish();

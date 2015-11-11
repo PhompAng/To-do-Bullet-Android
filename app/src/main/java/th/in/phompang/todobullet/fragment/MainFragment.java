@@ -40,7 +40,7 @@ import th.in.phompang.todobullet.helper.SessionManager;
  * create an instance of this fragment.
  */
 public class MainFragment extends Fragment {
-    public static final int DIALOG_FRAGMENT = 1;
+//    public static final int DIALOG_FRAGMENT = 1;
 
     private SQLiteHandler db;
     private SessionManager session;
@@ -139,11 +139,11 @@ public class MainFragment extends Fragment {
             switch (arg.getInt("type", -1)) {
                 case 0:
                     Log.d("arg", Integer.toString(arg.getInt("type")));
-                    addItem(arg.getString("title"), arg.getString("description"), 0);
+                    addItem(arg.getString("title"), arg.getString("description"), arg.getString("datetime"), 0);
                     break;
                 case 1:
                     ArrayList<TaskList> lst = arg.getParcelableArrayList("list");
-                    addItem(arg.getString("title"), lst, 1);
+                    addItem(arg.getString("title"), lst, arg.getString("datetime"), 1);
                     break;
                 default:
                     break;
@@ -166,34 +166,34 @@ public class MainFragment extends Fragment {
         }
         startActivity(intent);
     }
+//
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        switch (requestCode) {
+//            case DIALOG_FRAGMENT:
+//                if (resultCode == Activity.RESULT_OK) {
+//                    addItem(data.getStringExtra("name"), "", 0);
+//                } else if (requestCode == Activity.RESULT_CANCELED) {
+//                    // nothing to do here;
+//                }
+//                break;
+//        }
+//    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case DIALOG_FRAGMENT:
-                if (resultCode == Activity.RESULT_OK) {
-                    addItem(data.getStringExtra("name"), "", 0);
-                } else if (requestCode == Activity.RESULT_CANCELED) {
-                    // nothing to do here;
-                }
-                break;
-        }
-    }
-
-    private void addItem(String title, String description, int type) {
-        dataset.add(new Task(title, description, Task.TYPE_TEXT));
-        db.addTask(title, description, type, "");
+    private void addItem(String title, String description, String datetime, int type) {
+        dataset.add(new Task(title, description, datetime, Task.TYPE_TEXT));
+        db.addTask(title, description, type, datetime);
         mAdapter.notifyDataSetChanged();
     }
 
-    private void addItem(String title, ArrayList<TaskList> lst, int type) {
-        dataset.add(new Task(title, lst, Task.TYPE_LIST));
+    private void addItem(String title, ArrayList<TaskList> lst, String datetime, int type) {
+        dataset.add(new Task(title, lst, datetime, Task.TYPE_LIST));
 
         Gson gson = new Gson();
         String arrayList = gson.toJson(lst);
         Log.d("arrayList", arrayList);
 
-        db.addTask(title, arrayList, type, "");
+        db.addTask(title, arrayList, type, datetime);
 
         mAdapter.notifyDataSetChanged();
     }
@@ -207,7 +207,7 @@ public class MainFragment extends Fragment {
             int type = Integer.parseInt(task.get("type"));
             switch (type) {
                 case 0:
-                    dataset.add(new Task(task.get("title"), task.get("description"), type));
+                    dataset.add(new Task(task.get("title"), task.get("description"), task.get("time"), type));
                     break;
                 case 1:
                     ArrayList<TaskList> lst = new ArrayList<>();
@@ -227,7 +227,7 @@ public class MainFragment extends Fragment {
                         Log.d("finalOutputString", t.getName());
                     }
 
-                    dataset.add(new Task(task.get("title"), lst, type));
+                    dataset.add(new Task(task.get("title"), lst, task.get("time"), type));
                     break;
             }
 

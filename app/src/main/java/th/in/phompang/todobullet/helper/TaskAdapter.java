@@ -3,7 +3,6 @@ package th.in.phompang.todobullet.helper;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,16 +28,19 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static class TextViewHolder extends RecyclerView.ViewHolder {
         public TextView mName;
         public TextView mDes;
+        public TextView mDate;
 
         public TextViewHolder(View v) {
             super(v);
             mName = (TextView) v.findViewById(R.id.lname);
             mDes = (TextView) v.findViewById(R.id.ldes);
+            mDate = (TextView) v.findViewById(R.id.ldate);
         }
     }
 
     static class ListViewHolder extends RecyclerView.ViewHolder {
         public TextView mName;
+        public TextView mDate;
 
         public RecyclerView.Adapter adapter;
         public RecyclerView recycler_view_list;
@@ -49,6 +51,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(v);
 
             mName = (TextView) v.findViewById(R.id.lname);
+            mDate = (TextView) v.findViewById(R.id.ldate);
 
             recycler_view_list = (RecyclerView) v.findViewById(R.id.recycle_view_list);
             recycler_view_list.setHasFixedSize(true);
@@ -107,9 +110,9 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case Task.TYPE_TEXT:
                 TextViewHolder textViewHolder = (TextViewHolder) holder;
                 textViewHolder.mName.setText(task.getTitle());
+                textViewHolder.mDate.setText(task.getDatetime());
                 if (task.getDescripton().isEmpty()) {
                     textViewHolder.mDes.setVisibility(View.GONE);
-                    textViewHolder.mName.setPadding(dp2px(16), dp2px(24), dp2px(16), dp2px(24));
                 } else {
                     textViewHolder.mDes.setText(task.getDescripton());
                 }
@@ -117,8 +120,8 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case Task.TYPE_LIST:
                 ListViewHolder listViewHolder = (ListViewHolder) holder;
                 listViewHolder.mName.setText(task.getTitle());
+                listViewHolder.mDate.setText(task.getDatetime());
 
-                //listViewHolder.dataset = task.getDataset();
                 RecyclerView.Adapter adapter = new TaskListAdapter(mContex, task.getDataset());
                 listViewHolder.recycler_view_list.setAdapter(adapter);
                 break;
@@ -139,12 +142,6 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         return mTask.get(position).getType();
-    }
-
-    public int dp2px(int dp) {
-        float scale = mContex.getResources().getDisplayMetrics().density;
-        int dpAsPixels = (int) (dp*scale + 0.5f);
-        return dpAsPixels;
     }
 
 }

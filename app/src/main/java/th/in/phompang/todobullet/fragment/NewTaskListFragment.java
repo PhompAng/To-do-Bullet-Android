@@ -1,7 +1,9 @@
 package th.in.phompang.todobullet.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -11,8 +13,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.solovyev.android.views.llm.LinearLayoutManager;
 
@@ -33,11 +39,16 @@ import th.in.phompang.todobullet.helper.TaskListEditAdapter;
  */
 public class NewTaskListFragment extends Fragment {
 
+    public static final int DATEPICKER_FRAGMENT = 1;
+
     private RecyclerView.Adapter mAdapter;
     private TextView title;
     private Button button;
+    private Spinner date;
 
     private ArrayList<TaskList> dataset;
+    private ArrayList<String> date_data;
+    public String datetime = "";
 
     private OnSaveSelectedListener mCallback;
 
@@ -72,6 +83,25 @@ public class NewTaskListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_new_task_list, container, false);
 
         title = (TextView) v.findViewById(R.id.new_task_list_title);
+        date = (Spinner) v.findViewById(R.id.date);
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, initdateArray());
+        date.setAdapter(arrayAdapter);
+        date.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == date_data.size() - 1) {
+                    DialogFragment datefragment = DatePickerFragment.newInstance();
+                    datefragment.setTargetFragment(NewTaskListFragment.this, DATEPICKER_FRAGMENT);
+                    datefragment.show(getFragmentManager().beginTransaction(), "datepicker");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         RecyclerView mRecyclerView = (RecyclerView) v.findViewById(R.id.new_task_list_list);
         mRecyclerView.setHasFixedSize(true);
@@ -125,7 +155,25 @@ public class NewTaskListFragment extends Fragment {
 
     public interface OnSaveSelectedListener {
         // TODO: Update argument type and name
-        public void onNewTaskList(String title, ArrayList<TaskList> lst, int type);
+        public void onNewTaskList(String title, ArrayList<TaskList> lst, String datetime, int type);
+    }
+
+    public ArrayList<String> initdateArray() {
+        date_data = new ArrayList<>();
+        date_data.add("Today");
+        date_data.add("Tomorrow");
+        date_data.add("Next week");
+        date_data.add("Pick a date...");
+
+        return date_data;
+    }
+
+    public String getDatetime() {
+        return this.datetime;
+    }
+
+    public void setDateTime(String datetime) {
+        this.datetime = datetime;
     }
 
     public void validate() {
@@ -143,7 +191,7 @@ public class NewTaskListFragment extends Fragment {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            mCallback.onNewTaskList(title.getText().toString(), dataset, 1);
+            mCallback.onNewTaskList(title.getText().toString(), dataset, getDatetime(), 1);
         }
     }
 
@@ -164,6 +212,20 @@ public class NewTaskListFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        switch (requestCode) {
+            case DATEPICKER_FRAGMENT:
+                if (resultCode == Activity.RESULT_OK) {
+                    String year = Integer.toString(intent.getIntExtra("year", 0));
+                    String month = String.format("%02d", intent.getIntExtra("month", 0));
+                    String date = String.format("%02d", intent.getIntExtra("date", 0));
+                    Toast.makeText(getContext(), year + month + date, Toast.LENGTH_LONG).show();
+                    setDateTime(year+"-"+month+"-"+date);
+                }
+        }
     }
 
 }
