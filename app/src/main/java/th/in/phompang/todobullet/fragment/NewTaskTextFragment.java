@@ -77,7 +77,7 @@ public class NewTaskTextFragment extends Fragment {
         description = (EditText) v.findViewById(R.id.new_task_text_description);
         date = (Spinner) v.findViewById(R.id.date);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, initdateArray());
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, initdateArray());
         date.setAdapter(arrayAdapter);
 
         date.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
