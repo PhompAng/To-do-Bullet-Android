@@ -44,6 +44,7 @@ public class NewTaskTextFragment extends Fragment {
     private EditText title;
     private EditText description;
     private Spinner date;
+    private ArrayAdapter<String> arrayAdapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -78,7 +79,7 @@ public class NewTaskTextFragment extends Fragment {
         description = (EditText) v.findViewById(R.id.new_task_text_description);
         date = (Spinner) v.findViewById(R.id.date);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, initdateArray());
+        arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, initdateArray());
         date.setAdapter(arrayAdapter);
 
         date.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -177,7 +178,9 @@ public class NewTaskTextFragment extends Fragment {
                     String year = Integer.toString(intent.getIntExtra("year", 0));
                     String month = String.format("%02d", intent.getIntExtra("month", 0));
                     String date = String.format("%02d", intent.getIntExtra("date", 0));
-                    Toast.makeText(getContext(), year+month+date, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), year+month+date, Toast.LENGTH_LONG).show();
+                    date_data.set(date_data.size()-1, year+"-"+month+"-"+date);
+                    arrayAdapter.notifyDataSetChanged();
                     setDateTime(year+"-"+month+"-"+date);
                 }
         }
