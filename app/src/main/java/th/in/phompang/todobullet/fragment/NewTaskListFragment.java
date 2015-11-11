@@ -23,6 +23,7 @@ import android.widget.Toast;
 import org.solovyev.android.views.llm.LinearLayoutManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import jp.wasabeef.recyclerview.animators.adapters.ScaleInAnimationAdapter;
 import th.in.phompang.todobullet.R;
@@ -95,6 +96,8 @@ public class NewTaskListFragment extends Fragment {
                     DialogFragment datefragment = DatePickerFragment.newInstance();
                     datefragment.setTargetFragment(NewTaskListFragment.this, DATEPICKER_FRAGMENT);
                     datefragment.show(getFragmentManager().beginTransaction(), "datepicker");
+                } else {
+                    setDatetime(position);
                 }
             }
 
@@ -177,6 +180,31 @@ public class NewTaskListFragment extends Fragment {
         this.datetime = datetime;
     }
 
+    public void setDatetime(int position) {
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int date = c.get(Calendar.DATE);
+        switch (position) {
+            case 0:
+                this.datetime = Integer.toString(year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", date);
+                break;
+            case 1:
+                c.add(Calendar.DAY_OF_YEAR, 1);
+                date = c.get(Calendar.DATE);
+                this.datetime = Integer.toString(year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", date);
+                break;
+            case 2:
+                int i = c.get(Calendar.WEEK_OF_MONTH);
+                c.set(Calendar.WEEK_OF_MONTH, ++i);
+                date = c.get(Calendar.DATE);
+                this.datetime = Integer.toString(year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", date);
+            default:
+                break;
+        }
+        Toast.makeText(getContext(), datetime, Toast.LENGTH_LONG).show();
+    }
+
     public void validate() {
         title.setError(null);
 
@@ -224,9 +252,9 @@ public class NewTaskListFragment extends Fragment {
                     String month = String.format("%02d", intent.getIntExtra("month", 0));
                     String date = String.format("%02d", intent.getIntExtra("date", 0));
                     //Toast.makeText(getContext(), year + month + date, Toast.LENGTH_LONG).show();
-                    date_data.set(date_data.size()-1, year+"-"+month+"-"+date);
+                    date_data.set(date_data.size() - 1, year + "-" + month + "-" + date);
                     arrayAdapter.notifyDataSetChanged();
-                    setDateTime(year+"-"+month+"-"+date);
+                    setDateTime(year + "-" + month + "-" + date);
                 }
         }
     }
