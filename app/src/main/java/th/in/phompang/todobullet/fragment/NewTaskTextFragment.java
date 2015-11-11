@@ -84,7 +84,6 @@ public class NewTaskTextFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == date_data.size()-1) {
-                    Toast.makeText(getContext(), date_data.get(position), Toast.LENGTH_LONG).show();
                     DialogFragment datefragment = DatePickerFragment.newInstance();
                     datefragment.setTargetFragment(NewTaskTextFragment.this, DATEPICKER_FRAGMENT);
                     datefragment.show(getFragmentManager().beginTransaction(), "datepicker");
