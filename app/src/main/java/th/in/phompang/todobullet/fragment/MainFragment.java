@@ -181,19 +181,23 @@ public class MainFragment extends Fragment {
 //    }
 
     private void addItem(String title, String description, String datetime, int type) {
-        dataset.add(new Task(title, description, datetime, Task.TYPE_TEXT));
-        db.addTask(title, description, type, datetime);
+        long id = db.addTask(title, description, type, datetime);
+        if (id != -1) {
+            dataset.add(new Task(id, title, description, datetime, Task.TYPE_TEXT));
+        }
+
         mAdapter.notifyDataSetChanged();
     }
 
     private void addItem(String title, ArrayList<TaskList> lst, String datetime, int type) {
-        dataset.add(new Task(title, lst, datetime, Task.TYPE_LIST));
-
         Gson gson = new Gson();
         String arrayList = gson.toJson(lst);
         Log.d("arrayList", arrayList);
 
-        db.addTask(title, arrayList, type, datetime);
+        long id = db.addTask(title, arrayList, type, datetime);
+        if (id != -1) {
+            dataset.add(new Task(id, title, lst, datetime, Task.TYPE_LIST));
+        }
 
         mAdapter.notifyDataSetChanged();
     }
@@ -207,7 +211,7 @@ public class MainFragment extends Fragment {
             int type = Integer.parseInt(task.get("type"));
             switch (type) {
                 case 0:
-                    dataset.add(new Task(task.get("title"), task.get("description"), task.get("time"), type));
+                    dataset.add(new Task(Long.parseLong(task.get("id")), task.get("title"), task.get("description"), task.get("time"), type));
                     break;
                 case 1:
                     ArrayList<TaskList> lst = new ArrayList<>();
@@ -227,7 +231,7 @@ public class MainFragment extends Fragment {
                         Log.d("finalOutputString", t.getName());
                     }
 
-                    dataset.add(new Task(task.get("title"), lst, task.get("time"), type));
+                    dataset.add(new Task(Long.parseLong(task.get("id")), task.get("title"), lst, task.get("time"), type));
                     break;
             }
 

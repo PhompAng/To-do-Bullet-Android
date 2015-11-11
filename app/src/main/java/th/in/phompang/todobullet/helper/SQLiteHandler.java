@@ -100,7 +100,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addTask(String title, String des, int type, String time) {
+    public long addTask(String title, String des, int type, String time) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -111,6 +111,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
         long id = db.insert(TABLE_TASK, null, values);
         db.close();
+
+        return id;
     }
 
     public ArrayList<HashMap<String, String>> getTaskDeails() {
@@ -127,6 +129,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
         while(!cursor.isAfterLast()) {
             HashMap<String, String> task = new HashMap<String, String>();
+            task.put("id", cursor.getString(0));
             task.put("title", cursor.getString(1));
             task.put("description", cursor.getString(2));
             task.put("type", cursor.getString(3));
