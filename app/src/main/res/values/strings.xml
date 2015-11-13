@@ -31,6 +31,7 @@
     <string name="action_save">Save</string>
     <string name="action_palette">Palette</string>
     <string name="title_activity_add_task">AddTaskActivity</string>
+    <string name="menu_remove">Remove</string>
 
     <!-- String related to new task -->
     <string name="prompt_title">Title</string>

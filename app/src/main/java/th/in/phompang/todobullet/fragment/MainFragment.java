@@ -8,10 +8,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -25,7 +29,6 @@ import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import jp.wasabeef.recyclerview.animators.adapters.ScaleInAnimationAdapter;
 import th.in.phompang.todobullet.R;
 import th.in.phompang.todobullet.Task;
 import th.in.phompang.todobullet.TaskList;
@@ -39,7 +42,7 @@ import th.in.phompang.todobullet.helper.SessionManager;
  * Use the {@link MainFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.ClickListener{
 //    public static final int DIALOG_FRAGMENT = 1;
 
     private SQLiteHandler db;
@@ -50,8 +53,10 @@ public class MainFragment extends Fragment {
     private Activity mActivity;
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private TaskAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ActionModeCallback actionModeCallback = new ActionModeCallback();
+    private ActionMode actionMode;
 
     private ArrayList<Task> dataset;
 
@@ -115,7 +120,7 @@ public class MainFragment extends Fragment {
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new ScaleInAnimationAdapter(new TaskAdapter(getActivity(), initTask()));
+        mAdapter = new TaskAdapter(getActivity(), initTask(), this);
         mRecyclerView.setAdapter(mAdapter);
 
         FloatingActionButton new_task_text = (FloatingActionButton) v.findViewById(R.id.new_task_text);
@@ -166,19 +171,6 @@ public class MainFragment extends Fragment {
         }
         startActivity(intent);
     }
-//
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        switch (requestCode) {
-//            case DIALOG_FRAGMENT:
-//                if (resultCode == Activity.RESULT_OK) {
-//                    addItem(data.getStringExtra("name"), "", 0);
-//                } else if (requestCode == Activity.RESULT_CANCELED) {
-//                    // nothing to do here;
-//                }
-//                break;
-//        }
-//    }
 
     private void addItem(String title, String description, String datetime, int type) {
         long id = db.addTask(title, description, type, datetime);
@@ -259,5 +251,76 @@ public class MainFragment extends Fragment {
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, new LoginFragment().newInstance()).commit();
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        if (actionMode != null) {
+            toggleSelection(position);
+        }
+    }
+
+    @Override
+    public boolean onItemLongClicked(int position) {
+        if (actionMode == null) {
+            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(actionModeCallback);
+        }
+
+        toggleSelection(position);
+
+        return true;
+    }
+
+    /**
+     * Toggle the selection state of an item.
+     *
+     * If the item was the last one in the selection and is unselected, the selection is stopped.
+     * Note that the selection must already be started (actionMode must not be null).
+     *
+     * @param position Position of the item to toggle the selection state
+     */
+    private void toggleSelection(int position) {
+        mAdapter.toggleSelection(position);
+        int count = mAdapter.getSelectedItemCount();
+
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+            actionMode.setTitle(String.valueOf(count));
+            actionMode.invalidate();
+        }
+    }
+
+    private class ActionModeCallback implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate (R.menu.selected_menu, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.menu_remove:
+                    // TODO: actually remove items
+                    Log.d("remove", "menu_remove");
+                    mode.finish();
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mAdapter.clearSelection();
+            actionMode = null;
+        }
     }
 }

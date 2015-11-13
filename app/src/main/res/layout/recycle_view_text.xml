@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     card_view:cardCornerRadius="2dp"
     android:layout_margin="5dp"
+    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/cardview_dark_background">
 
     <LinearLayout
@@ -59,5 +60,11 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <View
+        android:id="@+id/selected_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/selected_overlay"
+        android:visibility="invisible" />
 
 </android.support.v7.widget.CardView>

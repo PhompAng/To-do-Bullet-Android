@@ -3,6 +3,7 @@ package th.in.phompang.todobullet.helper;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import th.in.phompang.todobullet.TaskList;
 import th.in.phompang.todobullet.R;
@@ -21,24 +23,65 @@ import th.in.phompang.todobullet.Task;
 /**
  * Created by Pichai Sivawat on 17/10/2558.
  */
-public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
+
+    private SparseBooleanArray selectedItems;
     private ArrayList<Task> mTask;
     private Context mContex;
 
-    static class TextViewHolder extends RecyclerView.ViewHolder {
+    private ViewHolder.ClickListener clickListener;
+
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+
+        View selectedOverlay;
+
+        private ClickListener listener;
+
+        public ViewHolder(View view) {
+            super(view);
+            selectedOverlay = view.findViewById(R.id.selected_overlay);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (listener != null) {
+                listener.onItemClicked(getPosition());
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            if (listener != null) {
+                return listener.onItemLongClicked(getPosition());
+            }
+            return false;
+        }
+
+        public interface ClickListener {
+            public void onItemClicked(int position);
+            public boolean onItemLongClicked(int position);
+        }
+    }
+
+    static class TextViewHolder extends ViewHolder {
         public TextView mName;
         public TextView mDes;
         public TextView mDate;
 
-        public TextViewHolder(View v) {
+        public TextViewHolder(View v, ClickListener listener) {
             super(v);
             mName = (TextView) v.findViewById(R.id.lname);
             mDes = (TextView) v.findViewById(R.id.ldes);
             mDate = (TextView) v.findViewById(R.id.ldate);
+
+            super.listener = listener;
+
+            v.setOnClickListener(this);
+            v.setOnLongClickListener(this);
         }
     }
 
-    static class ListViewHolder extends RecyclerView.ViewHolder {
+    static class ListViewHolder extends ViewHolder {
         public TextView mName;
         public TextView mDate;
 
@@ -47,7 +90,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public ArrayList<TaskList> dataset;
 
-        public ListViewHolder(View v) {
+        public ListViewHolder(View v, ClickListener listener) {
             super(v);
 
             mName = (TextView) v.findViewById(R.id.lname);
@@ -61,6 +104,11 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             adapter = new TaskListAdapter(v.getContext(), init());
             recycler_view_list.setAdapter(adapter);
+
+            super.listener = listener;
+
+            v.setOnClickListener(this);
+            v.setOnLongClickListener(this);
         }
 
         public ArrayList<TaskList> init() {
@@ -69,41 +117,48 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    static class ImageViewHolder extends RecyclerView.ViewHolder {
+    static class ImageViewHolder extends ViewHolder {
         public TextView mName;
         public ImageView mImageView;
 
-        public ImageViewHolder(View v) {
+        public ImageViewHolder(View v, ClickListener listener) {
             super(v);
             mName = (TextView) v.findViewById(R.id.lname);
             mImageView = (ImageView) v.findViewById(R.id.img_view);
+
+            super.listener = listener;
+
+            v.setOnClickListener(this);
+            v.setOnLongClickListener(this);
         }
     }
 
-    public TaskAdapter(Context ctx, ArrayList<Task> dataset) {
+    public TaskAdapter(Context ctx, ArrayList<Task> dataset, ViewHolder.ClickListener listener) {
         mTask = dataset;
         mContex = ctx;
+        selectedItems = new SparseBooleanArray();
+        this.clickListener = listener;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContex);
 
         switch (viewType) {
             case Task.TYPE_TEXT:
                 View textView = inflater.inflate(R.layout.recycle_view_text, parent, false);
-                return new TextViewHolder(textView);
+                return new TextViewHolder(textView, clickListener);
             case Task.TYPE_LIST:
                 View listView = inflater.inflate(R.layout.recycle_view_list, parent, false);
-                return new ListViewHolder(listView);
+                return new ListViewHolder(listView, clickListener);
             case Task.TYPE_IMAGE:default:
                 View imageView = inflater.inflate(R.layout.recycle_view_image, parent, false);
-                return new ImageViewHolder(imageView);
+                return new ImageViewHolder(imageView, clickListener);
         }
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         Task task = mTask.get(position);
 
         switch (holder.getItemViewType()) {
@@ -132,6 +187,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Glide.with(mContex).load("http://203.170.193.91:8000/img.jpg").fitCenter().centerCrop().into(imageViewHolder.mImageView);
                 break;
         }
+        holder.selectedOverlay.setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -144,4 +200,36 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return mTask.get(position).getType();
     }
 
+    public boolean isSelected(int position) {
+        return getSelectedItems().contains(position);
+    }
+
+    public int getSelectedItemCount() {
+        return selectedItems.size();
+    }
+
+    public void toggleSelection(int position) {
+        if (selectedItems.get(position, false)) {
+            selectedItems.delete(position);
+        } else {
+            selectedItems.put(position, true);
+        }
+        notifyItemChanged(position);
+    }
+
+    public void clearSelection() {
+        List<Integer> selection = getSelectedItems();
+        selectedItems.clear();
+        for (Integer i : selection) {
+            notifyItemChanged(i);
+        }
+    }
+
+    public List<Integer> getSelectedItems() {
+        List<Integer> items = new ArrayList<>(selectedItems.size());
+        for (int i = 0; i < selectedItems.size(); ++i) {
+            items.add(selectedItems.keyAt(i));
+        }
+        return items;
+    }
 }
