@@ -27,7 +27,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import th.in.phompang.todobullet.R;
 import th.in.phompang.todobullet.Task;
@@ -43,7 +45,6 @@ import th.in.phompang.todobullet.helper.SessionManager;
  * create an instance of this fragment.
  */
 public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.ClickListener{
-//    public static final int DIALOG_FRAGMENT = 1;
 
     private SQLiteHandler db;
     private SessionManager session;
@@ -307,8 +308,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_remove:
-                    // TODO: actually remove items
-                    Log.d("remove", "menu_remove");
+                    removeItem();
                     mode.finish();
                     return true;
 
@@ -321,6 +321,16 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         public void onDestroyActionMode(ActionMode mode) {
             mAdapter.clearSelection();
             actionMode = null;
+        }
+    }
+
+    public void removeItem() {
+        List<Integer> task;
+        task = mAdapter.getSelectedItems();
+        Collections.sort(task);
+        Collections.reverse(task);
+        for (Integer i: task) {
+            mAdapter.removeAt(i);
         }
     }
 }

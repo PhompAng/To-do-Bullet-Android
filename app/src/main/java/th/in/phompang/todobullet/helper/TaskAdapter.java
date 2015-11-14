@@ -25,6 +25,8 @@ import th.in.phompang.todobullet.Task;
  */
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
+    private SQLiteHandler db;
+
     private SparseBooleanArray selectedItems;
     private ArrayList<Task> mTask;
     private Context mContex;
@@ -138,6 +140,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         mContex = ctx;
         selectedItems = new SparseBooleanArray();
         this.clickListener = listener;
+        db = new SQLiteHandler(ctx);
     }
 
     @Override
@@ -231,5 +234,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             items.add(selectedItems.keyAt(i));
         }
         return items;
+    }
+
+    public void removeAt(int position) {
+        db.deleteTask((int) mTask.get(position).getId());
+        mTask.remove(position);
+        notifyItemRemoved(position);
     }
 }

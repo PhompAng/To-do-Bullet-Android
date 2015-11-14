@@ -35,7 +35,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
          public static final String KEY_TIME = "time";
      }
 
-
     public SQLiteHandler(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -149,5 +148,12 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
         db.delete(TABLE_TASK, null, null);
         db.close();
+    }
+
+    public void deleteTask(int id) {
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        database.delete(TABLE_TASK, Table_Task.KEY_ID + "=" + id, null);
+        database.close();
     }
 }
