@@ -8,12 +8,14 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/new_task_list_title_wrapper"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText android:id="@+id/new_task_list_title" android:layout_width="match_parent"
@@ -25,6 +27,7 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/new_task_list_list"
+            android:layout_below="@+id/new_task_list_title_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical" />
@@ -34,26 +37,22 @@
             android:layout_height="wrap_content"
             android:text="Add"
             android:textStyle="bold"
-            android:layout_gravity="center_horizontal" />
+            android:layout_below="@+id/new_task_list_list"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true" />
 
         <Spinner
             android:id="@+id/date"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/add_new_list"/>
 
-        <!--<android.support.design.widget.TextInputLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
-            <!--<EditText-->
-                <!--android:id="@+id/new_task_list_description"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:hint="Description"-->
-                <!--android:inputType="textMultiLine"-->
-                <!--android:lines="6"-->
-                <!--android:gravity="top|left"-->
-                <!--android:scrollbars="vertical"/>-->
-        <!--</android.support.design.widget.TextInputLayout>-->
-    </LinearLayout>
+        <Spinner
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/date"
+            android:layout_toEndOf="@+id/date"/>
+    </RelativeLayout>
 
 </FrameLayout>

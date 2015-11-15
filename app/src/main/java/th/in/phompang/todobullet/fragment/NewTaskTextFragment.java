@@ -31,8 +31,10 @@ import th.in.phompang.todobullet.R;
 public class NewTaskTextFragment extends Fragment {
 
     public static final int DATEPICKER_FRAGMENT = 1;
+    public static final int TIMEPICKER_FRAGMENT = 2;
 
-    public String datetime = "";
+    public String date = "";
+    public String time = "";
     public int position = -1;
     public int mode = 0;
 
@@ -44,11 +46,14 @@ public class NewTaskTextFragment extends Fragment {
     }
 
     private ArrayList<String> date_data;
+    private ArrayList<String> time_data;
 
     private EditText title;
     private EditText description;
-    private Spinner date;
-    private ArrayAdapter<String> arrayAdapter;
+    private Spinner mDate;
+    private Spinner mTime;
+    private ArrayAdapter<String> dateAdapter;
+    private ArrayAdapter<String> timeAdapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -81,12 +86,15 @@ public class NewTaskTextFragment extends Fragment {
 
         title = (EditText) v.findViewById(R.id.new_task_text_title);
         description = (EditText) v.findViewById(R.id.new_task_text_description);
-        date = (Spinner) v.findViewById(R.id.date);
+        mDate = (Spinner) v.findViewById(R.id.date);
+        mTime = (Spinner) v.findViewById(R.id.time);
 
-        arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, initdateArray());
-        date.setAdapter(arrayAdapter);
+        dateAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, initDateArray());
+        mDate.setAdapter(dateAdapter);
+        timeAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, initTimeArray());
+        mTime.setAdapter(timeAdapter);
 
-        date.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == date_data.size() - 1) {
@@ -94,7 +102,25 @@ public class NewTaskTextFragment extends Fragment {
                     datefragment.setTargetFragment(NewTaskTextFragment.this, DATEPICKER_FRAGMENT);
                     datefragment.show(getFragmentManager().beginTransaction(), "datepicker");
                 } else {
-                    setDatetime(position);
+                    pickDate(position);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        mTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == time_data.size() - 1) {
+                    DialogFragment timefragment = TimePickerFragment.newInstance();
+                    timefragment.setTargetFragment(NewTaskTextFragment.this, TIMEPICKER_FRAGMENT);
+                    timefragment.show(getFragmentManager().beginTransaction(), "timepicker");
+                } else {
+                    pickTime(position);
                 }
             }
 
@@ -126,7 +152,7 @@ public class NewTaskTextFragment extends Fragment {
         }
     }
 
-    public ArrayList<String> initdateArray() {
+    public ArrayList<String> initDateArray() {
         date_data = new ArrayList<>();
         date_data.add("Today");
         date_data.add("Tomorrow");
@@ -136,37 +162,76 @@ public class NewTaskTextFragment extends Fragment {
         return date_data;
     }
 
-    public String getDatetime() {
-        return this.datetime;
+    public ArrayList<String> initTimeArray() {
+        time_data = new ArrayList<>();
+        time_data.add("Morning");
+        time_data.add("Afternoon");
+        time_data.add("Evening");
+        time_data.add("Night");
+        time_data.add("Pick a time...");
+
+        return time_data;
     }
 
-    public void setDateTime(String datetime) {
-        this.datetime = datetime;
+    public String getTime() {
+        return this.time;
     }
 
-    public void setDatetime(int position) {
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void pickTime(int position) {
+        switch (position) {
+            case 0:
+                this.time = "09:00:00";
+                break;
+            case 1:
+                this.time = "13:00:00";
+                break;
+            case 2:
+                this.time = "17:00:00";
+                break;
+            case 3:
+                this.time = "20:00:00";
+                break;
+            default:
+                break;
+        }
+        Toast.makeText(getContext(), this.time, Toast.LENGTH_LONG).show();
+    }
+
+    public String getDate() {
+        return this.date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void pickDate(int position) {
         Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int date = c.get(Calendar.DATE);
         switch (position) {
             case 0:
-                this.datetime = Integer.toString(year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", date);
+                this.date = Integer.toString(year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", date);
                 break;
             case 1:
                 c.add(Calendar.DAY_OF_YEAR, 1);
                 date = c.get(Calendar.DATE);
-                this.datetime = Integer.toString(year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", date);
+                this.date = Integer.toString(year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", date);
                 break;
             case 2:
                 int i = c.get(Calendar.WEEK_OF_MONTH);
                 c.set(Calendar.WEEK_OF_MONTH, ++i);
                 date = c.get(Calendar.DATE);
-                this.datetime = Integer.toString(year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", date);
+                this.date = Integer.toString(year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", date);
             default:
                 break;
         }
-        Toast.makeText(getContext(), datetime, Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), this.date, Toast.LENGTH_LONG).show();
     }
 
     public void validate() {
@@ -186,10 +251,10 @@ public class NewTaskTextFragment extends Fragment {
         } else {
             switch (mode) {
                 case 0:
-                    mCallback.onNewTaskText(title.getText().toString(), description.getText().toString(), getDatetime(), 0);
+                    mCallback.onNewTaskText(title.getText().toString(), description.getText().toString(), getDate() + " " + getTime(), 0);
                     break;
                 case 1:
-                    mCallback.onNewTaskText(title.getText().toString(), description.getText().toString(), getDatetime(), 0, position);
+                    mCallback.onNewTaskText(title.getText().toString(), description.getText().toString(), getDate() + " " + getTime(), 0, position);
                     break;
             }
         }
@@ -224,8 +289,17 @@ public class NewTaskTextFragment extends Fragment {
                     String date = String.format("%02d", intent.getIntExtra("date", 0));
                     //Toast.makeText(getContext(), year+month+date, Toast.LENGTH_LONG).show();
                     date_data.set(date_data.size() - 1, year + "-" + month + "-" + date);
-                    arrayAdapter.notifyDataSetChanged();
-                    setDateTime(year + "-" + month + "-" + date);
+                    dateAdapter.notifyDataSetChanged();
+                    setDate(year + "-" + month + "-" + date);
+                }
+                break;
+            case TIMEPICKER_FRAGMENT:
+                if (resultCode == Activity.RESULT_OK) {
+                    String hour = String.format("%02d", intent.getIntExtra("hour", 0));
+                    String minute = String.format("%02d", intent.getIntExtra("minute", 0));
+                    time_data.set(time_data.size() - 1, hour + ":" + minute);
+                    timeAdapter.notifyDataSetChanged();
+                    setTime(hour + ":" + minute + ":00");
                 }
         }
     }
