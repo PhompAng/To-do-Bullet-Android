@@ -114,8 +114,25 @@ public class NewTaskListFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), android.support.v7.widget.LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new TaskListEditAdapter(getActivity(), initList());
+        Bundle arg = getArguments();
+        title.setText(arg.getString("title"));
+        dataset = new ArrayList<>();
+
+        if (arg.getParcelableArrayList("list") != null) {
+            dataset = arg.getParcelableArrayList("list");
+        } else {
+            dataset = initList();
+        }
+
+        mAdapter = new TaskListEditAdapter(getActivity(), dataset);
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new TaskListEditAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                mAdapter.removeAt(position);
+            }
+        });
+        mAdapter.notifyDataSetChanged();
 
         button = (Button) v.findViewById(R.id.add_new_list);
         button.setOnClickListener(new View.OnClickListener() {
@@ -126,36 +143,13 @@ public class NewTaskListFragment extends Fragment {
             }
         });
 
-        Bundle arg = getArguments();
-        title.setText(arg.getString("title"));
-
-        if (arg.getParcelableArrayList("list") != null) {
-            dataset = arg.getParcelableArrayList("list");
-            mAdapter = new TaskListEditAdapter(getActivity(), dataset);
-            mRecyclerView.setAdapter(mAdapter);
-        }
-
-        mAdapter.setOnItemClickListener(new TaskListEditAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View itemView, int position) {
-                mAdapter.removeAt(position);
-            }
-        });
-
         position = arg.getInt("position");
         mode = arg.getInt("mode");
-        mAdapter.notifyDataSetChanged();
 
         return v;
     }
-
-    public void addList(String name) {
-        dataset.add(new TaskList(name));
-        mAdapter.notifyDataSetChanged();
-    }
-
+    
     public ArrayList<TaskList> initList() {
-        dataset = new ArrayList<TaskList>();
         dataset.add(new TaskList(""));
 
         return dataset;
