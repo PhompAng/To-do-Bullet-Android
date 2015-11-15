@@ -32,5 +32,13 @@
                 android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
 
+        <ImageView
+            android:id="@+id/list_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_highlight_remove_24dp"
+            android:layout_alignBottom="@+id/bullet"
+            android:layout_alignEnd="@+id/editText" />
+
     </RelativeLayout>
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 
@@ -22,16 +23,38 @@ public class TaskListEditAdapter extends RecyclerView.Adapter<TaskListEditAdapte
     private ArrayList<TaskList> mDataset;
     private Context mContext;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    private static OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         public EditText mTxt;
+        public ImageView mImageView;
         public MyCustomEditTextListener myCustomEditTextListener;
 
         public ViewHolder(View v, MyCustomEditTextListener myCustomEditTextListener) {
             super(v);
 
+            mImageView = (ImageView) v.findViewById(R.id.list_remove);
+
             this.mTxt = (EditText) v.findViewById(R.id.new_task_list_list_item);
             this.myCustomEditTextListener = myCustomEditTextListener;
             this.mTxt.addTextChangedListener(myCustomEditTextListener);
+
+            mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onItemClick(v, getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 
@@ -50,7 +73,7 @@ public class TaskListEditAdapter extends RecyclerView.Adapter<TaskListEditAdapte
     }
 
     @Override
-    public void onBindViewHolder(TaskListEditAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(TaskListEditAdapter.ViewHolder holder, final int position) {
 
         holder.myCustomEditTextListener.updatePosition(position);
         holder.mTxt.setText(mDataset.get(position).getName());
@@ -59,6 +82,14 @@ public class TaskListEditAdapter extends RecyclerView.Adapter<TaskListEditAdapte
     @Override
     public int getItemCount() {
         return mDataset.size();
+    }
+
+    public void removeAt(int position) {
+        mDataset.remove(position);
+        notifyItemRemoved(position);
+        if (mDataset.size() == 0) {
+            mDataset.add(new TaskList(""));
+        }
     }
 
     private class MyCustomEditTextListener implements TextWatcher {

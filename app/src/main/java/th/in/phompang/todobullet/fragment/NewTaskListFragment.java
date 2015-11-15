@@ -25,7 +25,6 @@ import org.solovyev.android.views.llm.LinearLayoutManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import jp.wasabeef.recyclerview.animators.adapters.ScaleInAnimationAdapter;
 import th.in.phompang.todobullet.R;
 import th.in.phompang.todobullet.TaskList;
 import th.in.phompang.todobullet.helper.TaskListEditAdapter;
@@ -42,7 +41,7 @@ public class NewTaskListFragment extends Fragment {
 
     public static final int DATEPICKER_FRAGMENT = 1;
 
-    private RecyclerView.Adapter mAdapter;
+    private TaskListEditAdapter mAdapter;
     private TextView title;
     private Button button;
     private Spinner date;
@@ -115,7 +114,7 @@ public class NewTaskListFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), android.support.v7.widget.LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new ScaleInAnimationAdapter(new TaskListEditAdapter(getActivity(), initList()));
+        mAdapter = new TaskListEditAdapter(getActivity(), initList());
         mRecyclerView.setAdapter(mAdapter);
 
         button = (Button) v.findViewById(R.id.add_new_list);
@@ -129,11 +128,20 @@ public class NewTaskListFragment extends Fragment {
 
         Bundle arg = getArguments();
         title.setText(arg.getString("title"));
+
         if (arg.getParcelableArrayList("list") != null) {
             dataset = arg.getParcelableArrayList("list");
-            mAdapter = new ScaleInAnimationAdapter(new TaskListEditAdapter(getActivity(), dataset));
+            mAdapter = new TaskListEditAdapter(getActivity(), dataset);
             mRecyclerView.setAdapter(mAdapter);
         }
+
+        mAdapter.setOnItemClickListener(new TaskListEditAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                mAdapter.removeAt(position);
+            }
+        });
+
         position = arg.getInt("position");
         mode = arg.getInt("mode");
         mAdapter.notifyDataSetChanged();
