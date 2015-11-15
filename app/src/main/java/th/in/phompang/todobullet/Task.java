@@ -1,5 +1,7 @@
 package th.in.phompang.todobullet;
 
+import android.net.Uri;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -16,6 +18,7 @@ public class Task implements Serializable {
     private String descripton;
     private String datetime;
     private ArrayList<TaskList> dataset;
+    private Uri image;
     private int type;
 
     public Task(long id, String title, String descripton, String datetime, int type) {
@@ -30,6 +33,14 @@ public class Task implements Serializable {
         this.id = id;
         this.title = title;
         this.dataset = lst;
+        this.datetime = datetime;
+        this.type = type;
+    }
+
+    public Task(long id, String title, Uri image, String datetime, int type) {
+        this.id = id;
+        this.title = title;
+        this.image = image;
         this.datetime = datetime;
         this.type = type;
     }
@@ -68,5 +79,9 @@ public class Task implements Serializable {
 
     public void setDatetime(String datetime) {
         this.datetime = datetime;
+    }
+
+    public Uri getImage() {
+        return image;
     }
 }

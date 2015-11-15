@@ -1,6 +1,7 @@
 package th.in.phompang.todobullet.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -11,10 +12,11 @@ import java.util.ArrayList;
 
 import th.in.phompang.todobullet.R;
 import th.in.phompang.todobullet.TaskList;
+import th.in.phompang.todobullet.fragment.NewTaskImageFragment;
 import th.in.phompang.todobullet.fragment.NewTaskListFragment;
 import th.in.phompang.todobullet.fragment.NewTaskTextFragment;
 
-public class AddTaskActivity extends AppCompatActivity implements NewTaskTextFragment.OnSaveSelectedListener, NewTaskListFragment.OnSaveSelectedListener {
+public class AddTaskActivity extends AppCompatActivity implements NewTaskTextFragment.OnSaveSelectedListener, NewTaskListFragment.OnSaveSelectedListener, NewTaskImageFragment.OnSaveSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,10 @@ public class AddTaskActivity extends AppCompatActivity implements NewTaskTextFra
                 taskListFragment.setArguments(bundle);
                 fragmentManager.beginTransaction().replace(R.id.flContent, taskListFragment).commit();
                 break;
+            case 2:
+                NewTaskImageFragment taskImageFragment = NewTaskImageFragment.newInstance();
+                taskImageFragment.setArguments(bundle);
+                fragmentManager.beginTransaction().replace(R.id.flContent, taskImageFragment).commit();
         }
 
     }
@@ -104,6 +110,31 @@ public class AddTaskActivity extends AppCompatActivity implements NewTaskTextFra
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("title", title);
         intent.putParcelableArrayListExtra("list", lst);
+        intent.putExtra("datetime", datetime);
+        intent.putExtra("type", type);
+        intent.putExtra("position", position);
+        intent.putExtra("mode", 1);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onNewTaskImage(String title, Uri image, String datetime, int type) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("title", title);
+        intent.putExtra("image", image.toString());
+        intent.putExtra("datetime", datetime);
+        intent.putExtra("type", type);
+        intent.putExtra("mode", 0);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onNewTaskImage(String title, Uri image, String datetime, int type, int position) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("title", title);
+        intent.putExtra("image", image.toString());
         intent.putExtra("datetime", datetime);
         intent.putExtra("type", type);
         intent.putExtra("position", position);

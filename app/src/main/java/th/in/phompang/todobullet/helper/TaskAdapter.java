@@ -122,11 +122,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     static class ImageViewHolder extends ViewHolder {
         public TextView mName;
         public ImageView mImageView;
+        public TextView mDate;
 
         public ImageViewHolder(View v, ClickListener listener) {
             super(v);
             mName = (TextView) v.findViewById(R.id.lname);
             mImageView = (ImageView) v.findViewById(R.id.img_view);
+            mDate = (TextView) v.findViewById(R.id.ldate);
 
             super.listener = listener;
 
@@ -186,8 +188,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             case Task.TYPE_IMAGE:default:
                 ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
                 imageViewHolder.mName.setText(task.getTitle());
+                imageViewHolder.mDate.setText(task.getDatetime());
 
-                Glide.with(mContex).load("http://203.170.193.91:8000/img.jpg").fitCenter().centerCrop().into(imageViewHolder.mImageView);
+                Glide.with(mContex).loadFromMediaStore(task.getImage()).fitCenter().centerCrop().into(imageViewHolder.mImageView);
                 break;
         }
         holder.selectedOverlay.setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);

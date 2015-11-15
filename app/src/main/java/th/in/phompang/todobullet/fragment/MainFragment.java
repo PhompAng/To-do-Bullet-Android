@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -139,6 +140,14 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
             }
         });
 
+        FloatingActionButton new_task_image = (FloatingActionButton) v.findViewById(R.id.new_task_image);
+        new_task_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNewTaskDialog(2);
+            }
+        });
+
         if (!getArguments().isEmpty()) {
             Bundle arg = getArguments();
             switch (arg.getInt("mode", -1)) {
@@ -151,6 +160,8 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
                             ArrayList<TaskList> lst = arg.getParcelableArrayList("list");
                             addItem(arg.getString("title"), lst, arg.getString("datetime"), 1);
                             break;
+                        case 2:
+                            addItem(arg.getString("title"), Uri.parse(arg.getString("image")), arg.getString("datetime"), 2);
                         default:
                             break;
                     }
@@ -163,6 +174,10 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
                         case 1:
                             ArrayList<TaskList> lst = arg.getParcelableArrayList("list");
                             updateTask(arg.getString("title"), lst, arg.getString("datetime"), 1, arg.getInt("position"));
+                            break;
+                        case 2:
+                            updateTask(arg.getString("title"), arg.getString("image"), arg.getString("datetime"), 2, arg.getInt("position"));
+                            break;
                     }
                     break;
                 default:
@@ -193,7 +208,14 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
     private void updateTask(String title, String description, String datetime, int type, int position) {
         int row = db.updateTask(title, description, type, datetime, (int) dataset.get(position).getId());
         if (row != 0) {
-            dataset.set(position, new Task((int) dataset.get(position).getId(), title, description,datetime,Task.TYPE_TEXT));
+            switch (type) {
+                case 0:
+                    dataset.set(position, new Task((int) dataset.get(position).getId(), title, description, datetime, type));
+                    break;
+                case 2:
+                    dataset.set(position, new Task((int) dataset.get(position).getId(), title, Uri.parse(description), datetime, type));
+            }
+
         }
         mAdapter.notifyItemChanged(position);
     }
@@ -218,6 +240,10 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
                 break;
             case 1:
                 intent.putParcelableArrayListExtra("list", dataset.get(position).getDataset());
+                break;
+            case 2:
+                intent.putExtra("image", dataset.get(position).getImage().toString());
+                break;
         }
         intent.putExtra("type", dataset.get(position).getType());
         intent.putExtra("position", position);
@@ -246,6 +272,14 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         mAdapter.notifyDataSetChanged();
     }
 
+    private void addItem(String title, Uri image, String datetime, int type) {
+        long id = db.addTask(title, image.toString(), type, datetime);
+        if (id != -1) {
+            dataset.add(new Task(id, title, image, datetime, Task.TYPE_IMAGE));
+        }
+
+        mAdapter.notifyDataSetChanged();
+    }
 
     private ArrayList<Task> initTask() {
         dataset = new ArrayList<Task>();
@@ -271,6 +305,9 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
                     }
 
                     dataset.add(new Task(Long.parseLong(task.get("id")), task.get("title"), lst, task.get("time"), type));
+                    break;
+                case 2:
+                    dataset.add(new Task(Long.parseLong(task.get("id")), task.get("title"), Uri.parse(task.get("description")), task.get("time"), type));
                     break;
             }
 
