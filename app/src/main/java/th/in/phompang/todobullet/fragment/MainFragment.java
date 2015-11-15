@@ -142,18 +142,36 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
 
         if (!getArguments().isEmpty()) {
             Bundle arg = getArguments();
-            switch (arg.getInt("type", -1)) {
+            Log.d("mode", Integer.toString(arg.getInt("mode", -1)));
+            switch (arg.getInt("mode", -1)) {
                 case 0:
-                    Log.d("arg", Integer.toString(arg.getInt("type")));
-                    addItem(arg.getString("title"), arg.getString("description"), arg.getString("datetime"), 0);
+                    switch (arg.getInt("type", -1)) {
+                        case 0:
+                            Log.d("arg", Integer.toString(arg.getInt("type")));
+                            addItem(arg.getString("title"), arg.getString("description"), arg.getString("datetime"), 0);
+                            break;
+                        case 1:
+                            ArrayList<TaskList> lst = arg.getParcelableArrayList("list");
+                            addItem(arg.getString("title"), lst, arg.getString("datetime"), 1);
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case 1:
-                    ArrayList<TaskList> lst = arg.getParcelableArrayList("list");
-                    addItem(arg.getString("title"), lst, arg.getString("datetime"), 1);
+                    switch (arg.getInt("type", -1)) {
+                        case 0:
+                            updateTask(arg.getString("title"), arg.getString("description"), arg.getString("datetime"), 0, arg.getInt("position"));
+                            break;
+                        case 1:
+                            ArrayList<TaskList> lst = arg.getParcelableArrayList("list");
+                            updateTask(arg.getString("title"), lst, arg.getString("datetime"), 1, arg.getInt("position"));
+                    }
                     break;
                 default:
                     break;
             }
+
 
         }
 
@@ -162,14 +180,53 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
 
     private void showNewTaskDialog(int type) {
         Intent intent = new Intent(getContext(), AddTaskActivity.class);
-        switch (type) {
+        intent.putExtra("mode", 0);
+        intent.putExtra("type", type);
+        startActivity(intent);
+    }
+
+    public void removeTask() {
+        List<Integer> task;
+        task = mAdapter.getSelectedItems();
+        Collections.sort(task);
+        Collections.reverse(task);
+        for (Integer i: task) {
+            mAdapter.removeAt(i);
+        }
+    }
+
+    private void updateTask(String title, String description, String datetime, int type, int position) {
+        int row = db.updateTask(title, description, type, datetime, (int) dataset.get(position).getId());
+        if (row != 0) {
+            dataset.set(position, new Task((int) dataset.get(position).getId(), title, description,datetime,Task.TYPE_TEXT));
+        }
+        mAdapter.notifyItemChanged(position);
+    }
+
+    private void updateTask(String title, ArrayList<TaskList> lst, String datetime, int type, int position) {
+        Gson gson = new Gson();
+        String arrayList = gson.toJson(lst);
+        int row = db.updateTask(title, arrayList, type, datetime, (int) dataset.get(position).getId());
+        if (row != 0){
+            dataset.set(position, new Task((int) dataset.get(position).getId(), title, lst, datetime, Task.TYPE_LIST));
+        }
+        mAdapter.notifyItemChanged(position);
+    }
+
+    private void editTask(int position) {
+        Intent intent = new Intent(getContext(), AddTaskActivity.class);
+        intent.putExtra("mode", 1);
+        intent.putExtra("title", dataset.get(position).getTitle());
+        switch (dataset.get(position).getType()) {
             case 0:
-                intent.putExtra("type", 0);
+                intent.putExtra("description", dataset.get(position).getDescripton());
                 break;
             case 1:
-                intent.putExtra("type", 1);
-                break;
+                intent.putParcelableArrayListExtra("list", dataset.get(position).getDataset());
         }
+        intent.putExtra("type", dataset.get(position).getType());
+        intent.putExtra("position", position);
+        //TODO datetime
         startActivity(intent);
     }
 
@@ -185,7 +242,6 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
     private void addItem(String title, ArrayList<TaskList> lst, String datetime, int type) {
         Gson gson = new Gson();
         String arrayList = gson.toJson(lst);
-        Log.d("arrayList", arrayList);
 
         long id = db.addTask(title, arrayList, type, datetime);
         if (id != -1) {
@@ -258,6 +314,9 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
     public void onItemClicked(int position) {
         if (actionMode != null) {
             toggleSelection(position);
+        } else {
+            Log.d("click", "click");
+            editTask(position);
         }
     }
 
@@ -308,7 +367,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_remove:
-                    removeItem();
+                    removeTask();
                     mode.finish();
                     return true;
 
@@ -321,16 +380,6 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         public void onDestroyActionMode(ActionMode mode) {
             mAdapter.clearSelection();
             actionMode = null;
-        }
-    }
-
-    public void removeItem() {
-        List<Integer> task;
-        task = mAdapter.getSelectedItems();
-        Collections.sort(task);
-        Collections.reverse(task);
-        for (Integer i: task) {
-            mAdapter.removeAt(i);
         }
     }
 }

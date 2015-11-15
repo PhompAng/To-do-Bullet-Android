@@ -24,29 +24,34 @@ public class AddTaskActivity extends AppCompatActivity implements NewTaskTextFra
         toolbar.setTitle("New Text Task");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
-//
-//        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-//        collapsingToolbarLayout.setTitle(" ");
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle extra = getIntent().getExtras();
+        switch (extra.getInt("mode")) {
+            case 0:
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
+                break;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putAll(extra);
+
         switch (extra.getInt("type")) {
             case 0:
-                fragmentManager.beginTransaction().replace(R.id.flContent, new NewTaskTextFragment().newInstance()).commit();
+                NewTaskTextFragment taskTextFragment = NewTaskTextFragment.newInstance();
+                taskTextFragment.setArguments(bundle);
+                fragmentManager.beginTransaction().replace(R.id.flContent, taskTextFragment).commit();
                 break;
             case 1:
-                fragmentManager.beginTransaction().replace(R.id.flContent, new NewTaskListFragment().newInstance()).commit();
+                NewTaskListFragment taskListFragment = NewTaskListFragment.newInstance();
+                taskListFragment.setArguments(bundle);
+                fragmentManager.beginTransaction().replace(R.id.flContent, taskListFragment).commit();
+                break;
         }
 
 
+
     }
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_add_task, menu);
-//        return true;
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -66,6 +71,20 @@ public class AddTaskActivity extends AppCompatActivity implements NewTaskTextFra
         intent.putExtra("description", description);
         intent.putExtra("datetime", datetime);
         intent.putExtra("type", type);
+        intent.putExtra("mode", 0);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onNewTaskText(String title, String description, String datetime, int type, int position) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("title", title);
+        intent.putExtra("description", description);
+        intent.putExtra("datetime", datetime);
+        intent.putExtra("type", type);
+        intent.putExtra("position", position);
+        intent.putExtra("mode", 1);
         startActivity(intent);
         finish();
     }
@@ -77,6 +96,20 @@ public class AddTaskActivity extends AppCompatActivity implements NewTaskTextFra
         intent.putParcelableArrayListExtra("list", lst);
         intent.putExtra("datetime", datetime);
         intent.putExtra("type", type);
+        intent.putExtra("mode", 0);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onNewTaskList(String title, ArrayList<TaskList> lst, String datetime, int type, int position) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("title", title);
+        intent.putParcelableArrayListExtra("list", lst);
+        intent.putExtra("datetime", datetime);
+        intent.putExtra("type", type);
+        intent.putExtra("position", position);
+        intent.putExtra("mode", 1);
         startActivity(intent);
         finish();
     }

@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,6 +52,8 @@ public class NewTaskListFragment extends Fragment {
     private ArrayList<TaskList> dataset;
     private ArrayList<String> date_data;
     public String datetime = "";
+    public int position = -1;
+    public int mode = 0;
 
     private OnSaveSelectedListener mCallback;
 
@@ -125,6 +128,17 @@ public class NewTaskListFragment extends Fragment {
             }
         });
 
+        Bundle arg = getArguments();
+        title.setText(arg.getString("title"));
+        if (arg.getParcelableArrayList("list") != null) {
+            dataset = arg.getParcelableArrayList("list");
+            mAdapter = new ScaleInAnimationAdapter(new TaskListEditAdapter(getActivity(), dataset));
+            mRecyclerView.setAdapter(mAdapter);
+        }
+        position = arg.getInt("position");
+        mode = arg.getInt("mode");
+        mAdapter.notifyDataSetChanged();
+
         return v;
     }
 
@@ -160,6 +174,7 @@ public class NewTaskListFragment extends Fragment {
     public interface OnSaveSelectedListener {
         // TODO: Update argument type and name
         public void onNewTaskList(String title, ArrayList<TaskList> lst, String datetime, int type);
+        public void onNewTaskList(String title, ArrayList<TaskList> lst, String datetime, int type, int position);
     }
 
     public ArrayList<String> initdateArray() {
@@ -220,7 +235,14 @@ public class NewTaskListFragment extends Fragment {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            mCallback.onNewTaskList(title.getText().toString(), dataset, getDatetime(), 1);
+            switch (mode) {
+                case 0:
+                    mCallback.onNewTaskList(title.getText().toString(), dataset, getDatetime(), 1);
+                    break;
+                case 1:
+                    mCallback.onNewTaskList(title.getText().toString(), dataset, getDatetime(), 1, position);
+                    break;
+            }
         }
     }
 

@@ -99,19 +99,47 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public long addTask(String title, String des, int type, String time) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
+    private ContentValues putContentValues(String title, String des, int type, String time) {
         ContentValues values = new ContentValues();
         values.put(Table_Task.KEY_TITLE, title);
         values.put(Table_Task.KEY_DES, des);
         values.put(Table_Task.KEY_TYPE, type);
         values.put(Table_Task.KEY_TIME, time);
 
+        return values;
+    }
+
+    public long addTask(String title, String des, int type, String time) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = putContentValues(title, des,type,time);
+
+//        ContentValues values = new ContentValues();
+//        values.put(Table_Task.KEY_TITLE, title);
+//        values.put(Table_Task.KEY_DES, des);
+//        values.put(Table_Task.KEY_TYPE, type);
+//        values.put(Table_Task.KEY_TIME, time);
+
         long id = db.insert(TABLE_TASK, null, values);
         db.close();
 
         return id;
+    }
+
+    public int updateTask(String title, String des, int type, String time, int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = putContentValues(title, des, type, time);
+
+//        ContentValues values = new ContentValues();
+//        values.put(Table_Task.KEY_TITLE, title);
+//        values.put(Table_Task.KEY_DES, des);
+//        values.put(Table_Task.KEY_TYPE, type);
+//        values.put(Table_Task.KEY_TIME, time);
+
+        int row = db.update(TABLE_TASK, values, Table_Task.KEY_ID + "=" + id, null);
+
+        return row;
     }
 
     public ArrayList<HashMap<String, String>> getTaskDeails() {

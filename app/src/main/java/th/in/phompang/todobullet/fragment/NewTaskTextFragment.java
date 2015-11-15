@@ -33,11 +33,14 @@ public class NewTaskTextFragment extends Fragment {
     public static final int DATEPICKER_FRAGMENT = 1;
 
     public String datetime = "";
+    public int position = -1;
+    public int mode = 0;
 
     OnSaveSelectedListener mCallback;
 
     public interface OnSaveSelectedListener {
         public void onNewTaskText(String title, String description, String datetime, int type);
+        public void onNewTaskText(String title, String description, String datetime, int type, int position);
     }
 
     private ArrayList<String> date_data;
@@ -100,6 +103,12 @@ public class NewTaskTextFragment extends Fragment {
 
             }
         });
+
+        Bundle arg = getArguments();
+        title.setText(arg.getString("title"));
+        description.setText(arg.getString("description"));
+        position = arg.getInt("position");
+        mode = arg.getInt("mode");
         return v;
     }
 
@@ -175,7 +184,14 @@ public class NewTaskTextFragment extends Fragment {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            mCallback.onNewTaskText(title.getText().toString(), description.getText().toString(), getDatetime(), 0);
+            switch (mode) {
+                case 0:
+                    mCallback.onNewTaskText(title.getText().toString(), description.getText().toString(), getDatetime(), 0);
+                    break;
+                case 1:
+                    mCallback.onNewTaskText(title.getText().toString(), description.getText().toString(), getDatetime(), 0, position);
+                    break;
+            }
         }
     }
 
