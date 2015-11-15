@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -142,12 +141,10 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
 
         if (!getArguments().isEmpty()) {
             Bundle arg = getArguments();
-            Log.d("mode", Integer.toString(arg.getInt("mode", -1)));
             switch (arg.getInt("mode", -1)) {
                 case 0:
                     switch (arg.getInt("type", -1)) {
                         case 0:
-                            Log.d("arg", Integer.toString(arg.getInt("type")));
                             addItem(arg.getString("title"), arg.getString("description"), arg.getString("datetime"), 0);
                             break;
                         case 1:
@@ -171,8 +168,6 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
                 default:
                     break;
             }
-
-
         }
 
         return v;
@@ -275,11 +270,6 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
                         lst.add(tl);
                     }
 
-                    for (TaskList t:
-                            lst) {
-                        Log.d("finalOutputString", t.getName());
-                    }
-
                     dataset.add(new Task(Long.parseLong(task.get("id")), task.get("title"), lst, task.get("time"), type));
                     break;
             }
@@ -315,7 +305,6 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         if (actionMode != null) {
             toggleSelection(position);
         } else {
-            Log.d("click", "click");
             editTask(position);
         }
     }

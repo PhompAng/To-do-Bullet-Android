@@ -21,7 +21,7 @@ public class AddTaskActivity extends AppCompatActivity implements NewTaskTextFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
         Toolbar toolbar = (Toolbar) findViewById(R.id.anim_toolbar);
-        toolbar.setTitle("New Text Task");
+        toolbar.setTitle("New Task");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -48,8 +48,6 @@ public class AddTaskActivity extends AppCompatActivity implements NewTaskTextFra
                 fragmentManager.beginTransaction().replace(R.id.flContent, taskListFragment).commit();
                 break;
         }
-
-
 
     }
 

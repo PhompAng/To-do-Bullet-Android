@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         Bundle extra = getIntent().getExtras();
         MainFragment mainFragment = MainFragment.newInstance();
         if (extra != null) {
-            //Toast.makeText(this, extra.getString("title", "null"), Toast.LENGTH_LONG).show();
             Bundle bundle = new Bundle();
             bundle.putAll(extra);
 
