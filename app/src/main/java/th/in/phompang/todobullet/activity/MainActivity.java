@@ -1,5 +1,6 @@
 package th.in.phompang.todobullet.activity;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -21,6 +22,7 @@ import th.in.phompang.todobullet.fragment.LoginFragment;
 import th.in.phompang.todobullet.fragment.MainFragment;
 import th.in.phompang.todobullet.fragment.RegisterFragment;
 import th.in.phompang.todobullet.helper.SQLiteHandler;
+import th.in.phompang.todobullet.helper.SessionManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView email;
 
     private SQLiteHandler db;
+    private SessionManager session;
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         header = (TextView) findViewById(R.id.header);
         email = (TextView) findViewById(R.id.email);
 
+        session = new SessionManager(this);
         db = new SQLiteHandler(this);
         HashMap<String, String> user = db.getUserDeails();
 
@@ -92,15 +98,12 @@ public class MainActivity extends AppCompatActivity {
 
         Class fragmentClass;
         switch(menuItem.getItemId()) {
-            case R.id.login:
-                fragmentClass = LoginFragment.class;
+            case R.id.main:
+                fragmentClass = MainFragment.class;
                 break;
-            case R.id.register:
-                fragmentClass = RegisterFragment.class;
-                break;
-            case R.id.action_gettoken:
-                fragmentClass = GetTokenFragment.class;
-                break;
+            case R.id.logout:
+                logoutUser();
+                return;
             default:
                 fragmentClass = MainActivity.class;
         }
@@ -148,5 +151,20 @@ public class MainActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public void logoutUser() {
+        session.setLogin(false);
+
+        db.deleteUsers();
+        db.deleteTask();
+        pref = this.getSharedPreferences("token", 0);
+        editor = pref.edit();
+
+        editor.clear();
+        editor.commit();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, new LoginFragment().newInstance()).commit();
     }
 }

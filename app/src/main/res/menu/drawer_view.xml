@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/main_menu"
+        android:checkableBehavior="single">
         <item
-            android:id="@+id/login"
-            android:title="Login" />
+            android:id="@+id/main"
+            android:icon="@drawable/ic_dashboard_24dp"
+            android:title="Task" />
+    </group>
+    <group
+        android:id="@+id/sub_menu"
+        android:checkableBehavior="single">
         <item
-            android:id="@+id/register"
-            android:title="Register" />
+            android:id="@+id/logout"
+            android:title="Logout" />
         <item
-            android:id="@+id/action_gettoken"
-            android:title="Get Token" />
-
-        <item android:title="Sub items">
-            <menu>
-                <item
-                    android:title="Sub item 1" />
-                <item
-                    android:title="Sub item 2" />
-            </menu>
-        </item>
+            android:title="About" />
     </group>
 </menu>
