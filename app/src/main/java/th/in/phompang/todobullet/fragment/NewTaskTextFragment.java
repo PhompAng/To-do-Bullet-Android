@@ -37,8 +37,8 @@ public class NewTaskTextFragment extends Fragment {
     OnSaveSelectedListener mCallback;
 
     public interface OnSaveSelectedListener {
-        public void onNewTaskText(String title, String description, String datetime, int type);
-        public void onNewTaskText(String title, String description, String datetime, int type, int position);
+        void onNewTaskText(String title, String description, String datetime, int type);
+        void onNewTaskText(String title, String description, String datetime, int type, int position);
     }
 
     private EditText title;
@@ -54,7 +54,6 @@ public class NewTaskTextFragment extends Fragment {
      *
      * @return A new instance of fragment NewTaskTextFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static NewTaskTextFragment newInstance() {
         NewTaskTextFragment fragment = new NewTaskTextFragment();
         Bundle args = new Bundle();
@@ -84,9 +83,9 @@ public class NewTaskTextFragment extends Fragment {
         mDate = (Spinner) v.findViewById(R.id.date);
         mTime = (Spinner) v.findViewById(R.id.time);
 
-        dateAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, datetime.date_data);
+        dateAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, datetime.date_data);
         mDate.setAdapter(dateAdapter);
-        timeAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, datetime.time_data);
+        timeAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, datetime.time_data);
         mTime.setAdapter(timeAdapter);
 
         mDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

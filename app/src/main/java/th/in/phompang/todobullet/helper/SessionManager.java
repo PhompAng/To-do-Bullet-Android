@@ -8,7 +8,6 @@ import android.content.SharedPreferences.Editor;
  * Created by พิชัย on 5/10/2558.
  */
 public class SessionManager {
-    private static String TAG = SessionManager.class.getSimpleName();
 
     SharedPreferences pref;
 

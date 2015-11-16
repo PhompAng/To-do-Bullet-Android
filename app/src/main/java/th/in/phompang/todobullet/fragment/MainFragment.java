@@ -80,7 +80,6 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
      *
      * @return A new instance of fragment MainFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
         Bundle args = new Bundle();
@@ -282,7 +281,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
     }
 
     private ArrayList<Task> initTask() {
-        dataset = new ArrayList<Task>();
+        dataset = new ArrayList<>();
         ArrayList<HashMap<String, String>> tasks = db.getTaskDeails();
 
         for (HashMap<String, String> task: tasks) {
@@ -331,7 +330,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         editor = pref.edit();
 
         editor.clear();
-        editor.commit();
+        editor.apply();
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, new LoginFragment().newInstance()).commit();

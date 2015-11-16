@@ -29,7 +29,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     private SparseBooleanArray selectedItems;
     private ArrayList<Task> mTask;
-    private Context mContex;
+    private Context mContext;
 
     private ViewHolder.ClickListener clickListener;
 
@@ -47,21 +47,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         @Override
         public void onClick(View v) {
             if (listener != null) {
-                listener.onItemClicked(getPosition());
+                listener.onItemClicked(getAdapterPosition());
             }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            if (listener != null) {
-                return listener.onItemLongClicked(getPosition());
-            }
-            return false;
+            return listener != null && listener.onItemLongClicked(getAdapterPosition());
         }
 
         public interface ClickListener {
-            public void onItemClicked(int position);
-            public boolean onItemLongClicked(int position);
+            void onItemClicked(int position);
+            boolean onItemLongClicked(int position);
         }
     }
 
@@ -139,7 +136,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     public TaskAdapter(Context ctx, ArrayList<Task> dataset, ViewHolder.ClickListener listener) {
         mTask = dataset;
-        mContex = ctx;
+        mContext = ctx;
         selectedItems = new SparseBooleanArray();
         this.clickListener = listener;
         db = new SQLiteHandler(ctx);
@@ -147,7 +144,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(mContex);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
         switch (viewType) {
             case Task.TYPE_TEXT:
@@ -182,7 +179,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                 listViewHolder.mName.setText(task.getTitle());
                 listViewHolder.mDate.setText(task.getDatetime());
 
-                RecyclerView.Adapter adapter = new TaskListAdapter(mContex, task.getDataset());
+                RecyclerView.Adapter adapter = new TaskListAdapter(mContext, task.getDataset());
                 listViewHolder.recycler_view_list.setAdapter(adapter);
                 break;
             case Task.TYPE_IMAGE:default:
@@ -190,7 +187,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                 imageViewHolder.mName.setText(task.getTitle());
                 imageViewHolder.mDate.setText(task.getDatetime());
 
-                Glide.with(mContex).loadFromMediaStore(task.getImage()).fitCenter().centerCrop().into(imageViewHolder.mImageView);
+                Glide.with(mContext).loadFromMediaStore(task.getImage()).fitCenter().centerCrop().into(imageViewHolder.mImageView);
                 break;
         }
         holder.selectedOverlay.setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);

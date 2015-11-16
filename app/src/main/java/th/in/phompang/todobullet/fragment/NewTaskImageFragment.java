@@ -53,8 +53,8 @@ public class NewTaskImageFragment extends Fragment {
     OnSaveSelectedListener mCallback;
 
     public interface OnSaveSelectedListener {
-        public void onNewTaskImage(String title, Uri image, String datetime, int type);
-        public void onNewTaskImage(String title, Uri image, String datetime, int type, int position);
+        void onNewTaskImage(String title, Uri image, String datetime, int type);
+        void onNewTaskImage(String title, Uri image, String datetime, int type, int position);
     }
 
     /**
@@ -63,7 +63,6 @@ public class NewTaskImageFragment extends Fragment {
      *
      * @return A new instance of fragment NewTaskImageFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static NewTaskImageFragment newInstance() {
         NewTaskImageFragment fragment = new NewTaskImageFragment();
         Bundle args = new Bundle();
@@ -94,9 +93,9 @@ public class NewTaskImageFragment extends Fragment {
         mDate = (Spinner) v.findViewById(R.id.date);
         mTime = (Spinner) v.findViewById(R.id.time);
 
-        dateAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, datetime.date_data);
+        dateAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, datetime.date_data);
         mDate.setAdapter(dateAdapter);
-        timeAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, datetime.time_data);
+        timeAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, datetime.time_data);
         mTime.setAdapter(timeAdapter);
 
         mDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -228,7 +227,6 @@ public class NewTaskImageFragment extends Fragment {
                     String year = Integer.toString(intent.getIntExtra("year", 0));
                     String month = String.format("%02d", intent.getIntExtra("month", 0));
                     String date = String.format("%02d", intent.getIntExtra("date", 0));
-                    //Toast.makeText(getContext(), year+month+date, Toast.LENGTH_LONG).show();
                     datetime.date_data.set(datetime.date_data.size() - 1, year + "-" + month + "-" + date);
                     dateAdapter.notifyDataSetChanged();
                     datetime.setDate(year + "-" + month + "-" + date);

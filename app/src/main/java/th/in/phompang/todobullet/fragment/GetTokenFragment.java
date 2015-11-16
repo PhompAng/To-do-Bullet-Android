@@ -31,7 +31,6 @@ public class GetTokenFragment extends Fragment {
      *
      * @return A new instance of fragment GetTokenFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static GetTokenFragment newInstance() {
         GetTokenFragment fragment = new GetTokenFragment();
         Bundle args = new Bundle();
@@ -109,7 +108,7 @@ public class GetTokenFragment extends Fragment {
             Toast.makeText(mActivity, access_token, Toast.LENGTH_LONG).show();
 
             editor.putString("token", access_token);
-            editor.commit();
+            editor.apply();
         }
     }
 

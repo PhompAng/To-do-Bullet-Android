@@ -67,9 +67,7 @@ public class TaskListEditAdapter extends RecyclerView.Adapter<TaskListEditAdapte
     public TaskListEditAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.recycle_view_new_list, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(v, new MyCustomEditTextListener());
-
-        return viewHolder;
+        return new ViewHolder(v, new MyCustomEditTextListener());
     }
 
     @Override

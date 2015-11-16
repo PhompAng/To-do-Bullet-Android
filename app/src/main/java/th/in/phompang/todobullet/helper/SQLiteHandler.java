@@ -72,7 +72,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     }
 
     public HashMap<String, String> getUserDeails() {
-        HashMap<String, String> user = new HashMap<String, String>();
+        HashMap<String, String> user = new HashMap<>();
 
         String selectQuery = "SELECT * FROM " + TABLE_USER;
 
@@ -114,12 +114,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
         ContentValues values = putContentValues(title, des,type,time);
 
-//        ContentValues values = new ContentValues();
-//        values.put(Table_Task.KEY_TITLE, title);
-//        values.put(Table_Task.KEY_DES, des);
-//        values.put(Table_Task.KEY_TYPE, type);
-//        values.put(Table_Task.KEY_TIME, time);
-
         long id = db.insert(TABLE_TASK, null, values);
         db.close();
 
@@ -131,15 +125,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
         ContentValues values = putContentValues(title, des, type, time);
 
-//        ContentValues values = new ContentValues();
-//        values.put(Table_Task.KEY_TITLE, title);
-//        values.put(Table_Task.KEY_DES, des);
-//        values.put(Table_Task.KEY_TYPE, type);
-//        values.put(Table_Task.KEY_TIME, time);
-
-        int row = db.update(TABLE_TASK, values, Table_Task.KEY_ID + "=" + id, null);
-
-        return row;
+        return db.update(TABLE_TASK, values, Table_Task.KEY_ID + "=" + id, null);
     }
 
     public ArrayList<HashMap<String, String>> getTaskDeails() {
@@ -155,7 +141,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         }
 
         while(!cursor.isAfterLast()) {
-            HashMap<String, String> task = new HashMap<String, String>();
+            HashMap<String, String> task = new HashMap<>();
             task.put("id", cursor.getString(0));
             task.put("title", cursor.getString(1));
             task.put("description", cursor.getString(2));

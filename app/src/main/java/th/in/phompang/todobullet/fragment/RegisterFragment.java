@@ -64,7 +64,6 @@ public class RegisterFragment extends Fragment {
      *
      * @return A new instance of fragment RegisterFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static RegisterFragment newInstance() {
         RegisterFragment fragment = new RegisterFragment();
         Bundle args = new Bundle();

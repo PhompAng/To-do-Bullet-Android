@@ -15,8 +15,7 @@ import java.util.Calendar;
  */
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
     public static TimePickerFragment newInstance() {
-        TimePickerFragment fragment = new TimePickerFragment();
-        return fragment;
+        return new TimePickerFragment();
     }
 
     @Override

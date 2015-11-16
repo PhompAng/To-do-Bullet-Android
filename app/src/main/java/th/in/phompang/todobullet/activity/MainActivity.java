@@ -132,11 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
 
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -162,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         editor = pref.edit();
 
         editor.clear();
-        editor.commit();
+        editor.apply();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, new LoginFragment().newInstance()).commit();
