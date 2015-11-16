@@ -76,8 +76,6 @@ public class NewTaskTextFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         datetime = new Datetime();
-        datetime.initDateArray();
-        datetime.initTimeArray();
 
         View v = inflater.inflate(R.layout.fragment_new_task_text, container, false);
 

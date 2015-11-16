@@ -84,8 +84,6 @@ public class NewTaskListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         datetime = new Datetime();
-        datetime.initDateArray();
-        datetime.initTimeArray();
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_new_task_list, container, false);

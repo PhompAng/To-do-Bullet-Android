@@ -13,6 +13,11 @@ public class Datetime {
     public ArrayList<String> date_data;
     public ArrayList<String> time_data;
 
+    public Datetime() {
+        initDateArray();
+        initTimeArray();
+    }
+
     public String getTime() {
         return this.time;
     }
@@ -76,7 +81,7 @@ public class Datetime {
         return this.date + " " + this.time;
     }
 
-    public void initDateArray() {
+    private void initDateArray() {
         date_data = new ArrayList<>();
         date_data.add("Today");
         date_data.add("Tomorrow");
@@ -84,7 +89,7 @@ public class Datetime {
         date_data.add("Pick a date...");
     }
 
-    public void initTimeArray() {
+    private void initTimeArray() {
         time_data = new ArrayList<>();
         time_data.add("Morning");
         time_data.add("Afternoon");
