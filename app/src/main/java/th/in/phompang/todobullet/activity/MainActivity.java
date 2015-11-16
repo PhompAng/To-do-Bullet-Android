@@ -11,12 +11,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import java.util.HashMap;
 
 import th.in.phompang.todobullet.R;
 import th.in.phompang.todobullet.fragment.GetTokenFragment;
 import th.in.phompang.todobullet.fragment.LoginFragment;
 import th.in.phompang.todobullet.fragment.MainFragment;
 import th.in.phompang.todobullet.fragment.RegisterFragment;
+import th.in.phompang.todobullet.helper.SQLiteHandler;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +28,10 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
+    private TextView header;
+    private TextView email;
+
+    private SQLiteHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +47,15 @@ public class MainActivity extends AppCompatActivity {
 
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         setupDrawerContent(nvDrawer);
+
+        header = (TextView) findViewById(R.id.header);
+        email = (TextView) findViewById(R.id.email);
+
+        db = new SQLiteHandler(this);
+        HashMap<String, String> user = db.getUserDeails();
+
+        header.setText(user.get("name"));
+        email.setText(user.get("email"));
 
         Bundle extra = getIntent().getExtras();
         MainFragment mainFragment = MainFragment.newInstance();
