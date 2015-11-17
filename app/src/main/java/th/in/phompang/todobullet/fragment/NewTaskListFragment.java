@@ -83,6 +83,8 @@ public class NewTaskListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         datetime = new Datetime();
+        Bundle arg = getArguments();
+        mode = arg.getInt("mode");
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_new_task_list, container, false);
@@ -99,7 +101,7 @@ public class NewTaskListFragment extends Fragment {
         mDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == datetime.date_data.size() - 1) {
+                if (position == datetime.date_data.size() - 1 && mode == 0) {
                     DialogFragment datefragment = DatePickerFragment.newInstance();
                     datefragment.setTargetFragment(NewTaskListFragment.this, DATEPICKER_FRAGMENT);
                     datefragment.show(getFragmentManager().beginTransaction(), "datepicker");
@@ -117,7 +119,7 @@ public class NewTaskListFragment extends Fragment {
         mTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == datetime.time_data.size() - 1) {
+                if (position == datetime.time_data.size() - 1 && mode == 0) {
                     DialogFragment timefragment = TimePickerFragment.newInstance();
                     timefragment.setTargetFragment(NewTaskListFragment.this, TIMEPICKER_FRAGMENT);
                     timefragment.show(getFragmentManager().beginTransaction(), "timepicker");
@@ -138,7 +140,6 @@ public class NewTaskListFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), android.support.v7.widget.LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        Bundle arg = getArguments();
         title.setText(arg.getString("title"));
         dataset = new ArrayList<>();
 
@@ -146,6 +147,15 @@ public class NewTaskListFragment extends Fragment {
             dataset = arg.getParcelableArrayList("list");
         } else {
             dataset = initList();
+        }
+        if (arg.getString("datetime") != null) {
+            String[] date = arg.getString("datetime").split("\\s+");
+            datetime.setDate(date[0]);
+            datetime.setTime(date[1]);
+            datetime.date_data.set(datetime.date_data.size() - 1, datetime.getDate());
+            datetime.time_data.set(datetime.time_data.size() - 1, datetime.getTime());
+            mDate.setSelection(datetime.date_data.size()-1);
+            mTime.setSelection(datetime.time_data.size()-1);
         }
 
         mAdapter = new TaskListEditAdapter(getActivity(), dataset);
@@ -168,7 +178,6 @@ public class NewTaskListFragment extends Fragment {
         });
 
         position = arg.getInt("position");
-        mode = arg.getInt("mode");
 
         return v;
     }

@@ -246,7 +246,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         }
         intent.putExtra("type", dataset.get(position).getType());
         intent.putExtra("position", position);
-        //TODO datetime
+        intent.putExtra("datetime", dataset.get(position).getDatetime());
         startActivity(intent);
     }
 

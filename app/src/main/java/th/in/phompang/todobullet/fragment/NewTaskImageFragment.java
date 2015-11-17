@@ -84,6 +84,8 @@ public class NewTaskImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         datetime = new Datetime();
+        Bundle arg = getArguments();
+        mode = arg.getInt("mode");
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_new_task_image, container, false);
@@ -101,7 +103,7 @@ public class NewTaskImageFragment extends Fragment {
         mDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == datetime.date_data.size() - 1) {
+                if (position == datetime.date_data.size() - 1 && mode == 0) {
                     DialogFragment datefragment = DatePickerFragment.newInstance();
                     datefragment.setTargetFragment(NewTaskImageFragment.this, DATEPICKER_FRAGMENT);
                     datefragment.show(getFragmentManager().beginTransaction(), "datepicker");
@@ -119,7 +121,7 @@ public class NewTaskImageFragment extends Fragment {
         mTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == datetime.time_data.size() - 1) {
+                if (position == datetime.time_data.size() - 1 && mode == 0) {
                     DialogFragment timefragment = TimePickerFragment.newInstance();
                     timefragment.setTargetFragment(NewTaskImageFragment.this, TIMEPICKER_FRAGMENT);
                     timefragment.show(getFragmentManager().beginTransaction(), "timepicker");
@@ -142,14 +144,22 @@ public class NewTaskImageFragment extends Fragment {
             }
         });
 
-        Bundle arg = getArguments();
         title.setText(arg.getString("title"));
         if (!arg.getString("image", "").equals("")) {
             selectedImage = Uri.parse(arg.getString("image"));
             Glide.with(this).loadFromMediaStore(selectedImage).fitCenter().centerCrop().into(mImageView);
         }
+
+        if (arg.getString("datetime") != null) {
+            String[] date = arg.getString("datetime").split("\\s+");
+            datetime.setDate(date[0]);
+            datetime.setTime(date[1]);
+            datetime.date_data.set(datetime.date_data.size() - 1, datetime.getDate());
+            datetime.time_data.set(datetime.time_data.size() - 1, datetime.getTime());
+            mDate.setSelection(datetime.date_data.size()-1);
+            mTime.setSelection(datetime.time_data.size() - 1);
+        }
         position = arg.getInt("position");
-        mode = arg.getInt("mode");
 
         return v;
     }
