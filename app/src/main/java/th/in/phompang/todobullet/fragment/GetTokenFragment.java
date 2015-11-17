@@ -65,7 +65,7 @@ public class GetTokenFragment extends Fragment {
                     pushbullet.loadUrl("javascript:window.HtmlViewer.showHTML" +
                             "(document.getElementsByTagName('body')[0].innerHTML);");
                     FragmentManager fragmentManager = getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.flContent, new MainFragment().newInstance()).commit();
+                    fragmentManager.beginTransaction().replace(R.id.flContent, new RegisterFragment().newInstance()).commit();
                 }
             }
         });

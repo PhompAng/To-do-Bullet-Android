@@ -111,7 +111,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.flContent, new RegisterFragment().newInstance()).commit();
+                fragmentManager.beginTransaction().replace(R.id.flContent, new GetTokenFragment().newInstance()).commit();
             }
         });
 
