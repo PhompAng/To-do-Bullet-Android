@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import th.in.phompang.todobullet.R;
+import th.in.phompang.todobullet.activity.MainActivity;
 import th.in.phompang.todobullet.app.AppConfig;
 import th.in.phompang.todobullet.app.AppController;
 import th.in.phompang.todobullet.helper.SQLiteHandler;
@@ -244,6 +245,7 @@ public class LoginFragment extends Fragment {
                         String created_at = user.getString("created_at");
 
                         db.addUser(name, email, token, created_at);
+                        ((MainActivity) getActivity()).updateHeader();
                         setToken(token);
                         getTask(token);
 

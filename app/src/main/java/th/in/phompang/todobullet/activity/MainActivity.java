@@ -58,10 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         session = new SessionManager(this);
         db = new SQLiteHandler(this);
-        HashMap<String, String> user = db.getUserDeails();
-
-        header.setText(user.get("name"));
-        email.setText(user.get("email"));
+        updateHeader();
 
         Bundle extra = getIntent().getExtras();
         MainFragment mainFragment = MainFragment.newInstance();
@@ -163,5 +160,12 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, new LoginFragment().newInstance()).commit();
+    }
+
+    public void updateHeader() {
+        HashMap<String, String> user = db.getUserDeails();
+
+        header.setText(user.get("name"));
+        email.setText(user.get("email"));
     }
 }
