@@ -102,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = MainFragment.class;
                 break;
             case R.id.logout:
+                menuItem.setChecked(true);
+                mDrawer.closeDrawers();
                 logoutUser();
                 return;
             default:
@@ -119,9 +121,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
-        // Highlight the selected item, update the title, and close the drawer
         menuItem.setChecked(true);
-        setTitle(menuItem.getTitle());
         mDrawer.closeDrawers();
     }
 
