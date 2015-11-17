@@ -35,6 +35,7 @@ import th.in.phompang.todobullet.R;
 import th.in.phompang.todobullet.Task;
 import th.in.phompang.todobullet.TaskList;
 import th.in.phompang.todobullet.activity.AddTaskActivity;
+import th.in.phompang.todobullet.helper.ServerAPI;
 import th.in.phompang.todobullet.helper.TaskAdapter;
 import th.in.phompang.todobullet.helper.SQLiteHandler;
 import th.in.phompang.todobullet.helper.SessionManager;
@@ -50,6 +51,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
     private SessionManager session;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
+    private ServerAPI serverAPI;
 
     private Activity mActivity;
 
@@ -109,6 +111,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
 
         db = new SQLiteHandler(mActivity);
         session = new SessionManager(mActivity);
+        serverAPI = new ServerAPI(mActivity);
 
         if(!session.isLogin()) {
             logoutUser();
@@ -254,6 +257,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         long id = db.addTask(title, description, type, datetime);
         if (id != -1) {
             dataset.add(new Task(id, title, description, datetime, Task.TYPE_TEXT));
+            serverAPI.addTask(title, description, datetime, type, id);
         }
 
         mAdapter.notifyDataSetChanged();
@@ -266,15 +270,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         long id = db.addTask(title, arrayList, type, datetime);
         if (id != -1) {
             dataset.add(new Task(id, title, lst, datetime, Task.TYPE_LIST));
-        }
-
-        mAdapter.notifyDataSetChanged();
-    }
-
-    private void addItem(long id, String title, String des, String datetime, int type) {
-        long add_id = db.addTask(id, title, des, type, datetime);
-        if (id != -1) {
-            dataset.add(new Task(add_id, title, des, datetime, Task.TYPE_TEXT));
+            serverAPI.addTask(title, arrayList, datetime, Task.TYPE_LIST, id);
         }
 
         mAdapter.notifyDataSetChanged();
@@ -284,6 +280,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         long id = db.addTask(title, image.toString(), type, datetime);
         if (id != -1) {
             dataset.add(new Task(id, title, image, datetime, Task.TYPE_IMAGE));
+            //TODO multipart form
         }
 
         mAdapter.notifyDataSetChanged();

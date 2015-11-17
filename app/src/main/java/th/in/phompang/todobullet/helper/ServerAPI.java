@@ -1,0 +1,85 @@
+package th.in.phompang.todobullet.helper;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import th.in.phompang.todobullet.app.AppConfig;
+import th.in.phompang.todobullet.app.AppController;
+
+/**
+ * Created by Pichai Sivawat on 18/11/2558.
+ */
+public class ServerAPI {
+
+    SharedPreferences pref;
+    private Context ctx;
+    private SQLiteHandler db;
+
+    public ServerAPI(Context context) {
+        this.ctx = context;
+        db = new SQLiteHandler(this.ctx);
+    }
+
+    public void addTask(final String title, final String description, final String datetime, final int type, final long local_id) {
+        String tag_string_req = "req_get_task";
+
+        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_ADD_TASK, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    boolean error = obj.getBoolean("error");
+
+                    if(!error) {
+
+                    } else {
+                        String errorMsg = obj.getString("error_msg");
+                        Toast.makeText(ctx, errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(ctx, "JSON Error" + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(ctx, error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("title", title);
+                params.put("description", description);
+                params.put("type", String.valueOf(type));
+                params.put("token", getToken());
+                params.put("time", datetime);
+                params.put("local_id", String.valueOf(local_id));
+                Log.d("params", params.toString());
+
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    public String getToken() {
+        pref = ctx.getSharedPreferences("token", 0);
+        return pref.getString("token", "null");
+    }
+}
