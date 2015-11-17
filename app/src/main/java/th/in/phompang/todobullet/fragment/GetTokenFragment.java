@@ -13,7 +13,6 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -104,8 +103,6 @@ public class GetTokenFragment extends Fragment {
 
             SharedPreferences pref = mActivity.getSharedPreferences("token", 0);
             SharedPreferences.Editor editor = pref.edit();
-
-            Toast.makeText(mActivity, access_token, Toast.LENGTH_LONG).show();
 
             editor.putString("token", access_token);
             editor.apply();
