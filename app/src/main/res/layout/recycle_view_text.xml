@@ -8,7 +8,7 @@
     card_view:cardCornerRadius="2dp"
     android:layout_margin="5dp"
     android:foreground="?android:attr/selectableItemBackground"
-    card_view:cardBackgroundColor="@color/cardview_dark_background">
+    card_view:cardBackgroundColor="@color/card_yellow">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,20 +24,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/dark_gray"
                 android:textSize="24sp"/>
             <TextView
                 android:id="@+id/ldes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/dark_gray"
                 android:textSize="14sp" />
             </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
+            android:background="@color/light_gray" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,13 +48,14 @@
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_marginTop="0.5dp"
+                android:tint="@color/dark_gray"
                 android:paddingRight="2dp"/>
             <TextView
                 android:id="@+id/ldate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:textColor="@color/white"
+                android:textColor="@color/dark_gray"
                 android:textSize="8sp"
                 android:text="2015-10-20"
                 android:layout_toEndOf="@+id/clock_icon" />
