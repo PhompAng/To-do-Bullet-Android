@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -240,9 +242,8 @@ public class LoginFragment extends Fragment {
                         String created_at = user.getString("created_at");
 
                         db.addUser(name, email, token, created_at);
+                        getTask(token);
 
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.flContent, new MainFragment().newInstance()).commit();
                     } else {
                         String errorMsg = obj.getString("error_msg");
                         Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG).show();
@@ -273,5 +274,58 @@ public class LoginFragment extends Fragment {
 
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
+    }
+
+    public void getTask(final String token) {
+        String tag_string_req = "req_get_task";
+
+        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_GET_TASK, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    boolean error = obj.getBoolean("error");
+
+                    if(!error) {
+                        JSONArray tasks = obj.getJSONArray("tasks");
+                        for (int i=0; i<tasks.length(); i++) {
+                            JSONObject task = tasks.getJSONObject(i);
+                            db.addTask(task.getLong("local_id"), task.getString("title"), task.getString("description"), task.getInt("type"), task.getString("time"));
+                            Log.d("title", task.getString("title"));
+                            Log.d("description", task.getString("description"));
+                            Log.d("type", Integer.toString(task.getInt("type")));
+                            Log.d("local_id", Long.toString(task.getLong("local_id")));
+                        }
+
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.flContent, new MainFragment().newInstance()).commit();
+                    } else {
+                        String errorMsg = obj.getString("error_msg");
+                        Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG).show();
+                        showProgress(false);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), "JSON Error" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    showProgress(false);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+                showProgress(false);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 }
