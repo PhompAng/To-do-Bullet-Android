@@ -271,6 +271,15 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         mAdapter.notifyDataSetChanged();
     }
 
+    private void addItem(long id, String title, String des, String datetime, int type) {
+        long add_id = db.addTask(id, title, des, type, datetime);
+        if (id != -1) {
+            dataset.add(new Task(add_id, title, des, datetime, Task.TYPE_TEXT));
+        }
+
+        mAdapter.notifyDataSetChanged();
+    }
+
     private void addItem(String title, Uri image, String datetime, int type) {
         long id = db.addTask(title, image.toString(), type, datetime);
         if (id != -1) {

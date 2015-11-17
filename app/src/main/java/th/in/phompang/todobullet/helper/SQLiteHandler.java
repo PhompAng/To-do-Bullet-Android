@@ -109,6 +109,22 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return values;
     }
 
+    public long addTask(long local_id, String title, String des, int type, String time) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        
+        ContentValues values = new ContentValues();
+        values.put(Table_Task.KEY_ID, local_id);
+        values.put(Table_Task.KEY_TITLE, title);
+        values.put(Table_Task.KEY_DES, des);
+        values.put(Table_Task.KEY_TYPE, type);
+        values.put(Table_Task.KEY_TIME, time);
+
+        long id = db.insert(TABLE_TASK, null, values);
+        db.close();
+
+        return id;
+    }
+
     public long addTask(String title, String des, int type, String time) {
         SQLiteDatabase db = this.getWritableDatabase();
 
