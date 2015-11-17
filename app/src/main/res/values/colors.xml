@@ -9,4 +9,5 @@
     <color name="card_yellow">#FFFF8D</color>
     <color name="card_blue">#80D8FF</color>
     <color name="light_gray">#BDBDBD</color>
+    <color name="white_pressed">#E0E0E0</color>
 </resources>

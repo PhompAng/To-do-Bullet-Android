@@ -34,13 +34,13 @@
         app:fabSize="normal"
         app:fab_labelStyle="@style/menu_labels_style"
         app:fab_icon="@drawable/ic_add_24dp">
-        <!-- TODO app:fab_colorPressed="@color/white_pressed" -->
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/new_task_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_icon="@drawable/ic_subject_24dp"
             app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"
             app:fab_size="mini"
             app:fab_title="Text"/>
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"
             app:fab_icon="@drawable/ic_format_list_bulleted_24dp"
             app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"
             app:fab_size="mini"
             app:fab_title="List"/>
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -57,6 +58,7 @@
             android:layout_height="wrap_content"
             app:fab_icon="@drawable/ic_photo_library_24dp"
             app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"
             app:fab_size="mini"
             app:fab_title="Image"/>
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
