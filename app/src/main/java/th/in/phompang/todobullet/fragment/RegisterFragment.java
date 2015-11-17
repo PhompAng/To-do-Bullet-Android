@@ -235,7 +235,7 @@ public class RegisterFragment extends Fragment {
                         Toast.makeText(getActivity(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
 
                         FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.flContent, new RegisterFragment().newInstance()).commit();
+                        fragmentManager.beginTransaction().replace(R.id.flContent, new LoginFragment().newInstance()).commit();
 
                     } else {
                         Toast.makeText(getActivity(), obj.getString("error_msg"), Toast.LENGTH_LONG).show();
