@@ -91,10 +91,10 @@ public class Datetime {
 
     private void initTimeArray() {
         time_data = new ArrayList<>();
-        time_data.add("Morning");
-        time_data.add("Afternoon");
-        time_data.add("Evening");
-        time_data.add("Night");
+        time_data.add("Morning (09:00)");
+        time_data.add("Afternoon (13:00)");
+        time_data.add("Evening (17:00)");
+        time_data.add("Night (20:00)");
         time_data.add("Pick a time...");
     }
 }

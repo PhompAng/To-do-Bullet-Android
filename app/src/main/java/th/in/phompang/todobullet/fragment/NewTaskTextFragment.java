@@ -94,7 +94,7 @@ public class NewTaskTextFragment extends Fragment {
         mDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == datetime.date_data.size() - 1 && mode == 0) {
+                if (position == datetime.date_data.size() - 1) {
                     DialogFragment datefragment = DatePickerFragment.newInstance();
                     datefragment.setTargetFragment(NewTaskTextFragment.this, DATEPICKER_FRAGMENT);
                     datefragment.show(getFragmentManager().beginTransaction(), "datepicker");
@@ -112,7 +112,7 @@ public class NewTaskTextFragment extends Fragment {
         mTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == datetime.time_data.size() - 1 && mode == 0) {
+                if (position == datetime.time_data.size() - 1) {
                     DialogFragment timefragment = TimePickerFragment.newInstance();
                     timefragment.setTargetFragment(NewTaskTextFragment.this, TIMEPICKER_FRAGMENT);
                     timefragment.show(getFragmentManager().beginTransaction(), "timepicker");
@@ -134,10 +134,10 @@ public class NewTaskTextFragment extends Fragment {
             String[] date = arg.getString("datetime").split("\\s+");
             datetime.setDate(date[0]);
             datetime.setTime(date[1]);
-            datetime.date_data.set(datetime.date_data.size() - 1, datetime.getDate());
-            datetime.time_data.set(datetime.time_data.size() - 1, datetime.getTime());
-            mDate.setSelection(datetime.date_data.size()-1);
-            mTime.setSelection(datetime.time_data.size()-1);
+            datetime.date_data.add(datetime.date_data.size() - 1, datetime.getDate());
+            datetime.time_data.add(datetime.time_data.size() - 1, datetime.getTime());
+            mDate.setSelection(datetime.date_data.size()-2);
+            mTime.setSelection(datetime.time_data.size()-2);
         }
         return v;
     }
