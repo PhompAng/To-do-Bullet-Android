@@ -78,6 +78,51 @@ public class ServerAPI {
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
+    public void updateTask(final String title, final String description, final String datetime, final int type, final long local_id) {
+        String tag_string_req = "req_get_task";
+
+        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_UPDATE_TASK, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    boolean error = obj.getBoolean("error");
+
+                    if(!error) {
+
+                    } else {
+                        String errorMsg = obj.getString("error_msg");
+                        Toast.makeText(ctx, errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(ctx, "JSON Error" + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(ctx, error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("title", title);
+                params.put("description", description);
+                params.put("type", String.valueOf(type));
+                params.put("token", getToken());
+                params.put("time", datetime);
+                params.put("local_id", String.valueOf(local_id));
+                Log.d("params", params.toString());
+
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
     public String getToken() {
         pref = ctx.getSharedPreferences("token", 0);
         return pref.getString("token", "null");

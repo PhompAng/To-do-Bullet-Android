@@ -213,6 +213,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
             switch (type) {
                 case 0:
                     dataset.set(position, new Task((int) dataset.get(position).getId(), title, description, datetime, type));
+                    serverAPI.updateTask(title, description, datetime, type, dataset.get(position).getId());
                     break;
                 case 2:
                     dataset.set(position, new Task((int) dataset.get(position).getId(), title, Uri.parse(description), datetime, type));
@@ -228,6 +229,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         int row = db.updateTask(title, arrayList, type, datetime, (int) dataset.get(position).getId());
         if (row != 0){
             dataset.set(position, new Task((int) dataset.get(position).getId(), title, lst, datetime, Task.TYPE_LIST));
+            serverAPI.updateTask(title, arrayList, datetime, type, dataset.get(position).getId());
         }
         mAdapter.notifyItemChanged(position);
     }
