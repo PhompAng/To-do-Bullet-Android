@@ -4,6 +4,7 @@ package th.in.phompang.todobullet.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ public class LoginFragment extends Fragment {
 
     private SQLiteHandler db;
     private SessionManager session;
+    private SharedPreferences preferences;
 
     private EditText mEmailView;
     private EditText mPasswordView;
@@ -242,6 +244,7 @@ public class LoginFragment extends Fragment {
                         String created_at = user.getString("created_at");
 
                         db.addUser(name, email, token, created_at);
+                        setToken(token);
                         getTask(token);
 
                     } else {
@@ -327,5 +330,13 @@ public class LoginFragment extends Fragment {
         };
 
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    private void setToken(String token) {
+        SharedPreferences pref = getActivity().getSharedPreferences("token", 0);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putString("token", token);
+        editor.apply();
     }
 }
