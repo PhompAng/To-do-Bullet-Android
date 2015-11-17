@@ -105,11 +105,12 @@ public class MainActivity extends AppCompatActivity {
                 logoutUser();
                 return;
             default:
-                fragmentClass = MainActivity.class;
+                fragmentClass = MainFragment.class;
         }
 
         try {
             fragment = (Fragment) fragmentClass.newInstance();
+            fragment.setArguments(new Bundle());
         } catch (Exception e) {
             e.printStackTrace();
         }
