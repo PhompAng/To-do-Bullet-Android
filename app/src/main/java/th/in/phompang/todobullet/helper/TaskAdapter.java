@@ -26,6 +26,7 @@ import th.in.phompang.todobullet.Task;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     private SQLiteHandler db;
+    private ServerAPI serverAPI;
 
     private SparseBooleanArray selectedItems;
     private ArrayList<Task> mTask;
@@ -140,6 +141,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         selectedItems = new SparseBooleanArray();
         this.clickListener = listener;
         db = new SQLiteHandler(ctx);
+        serverAPI = new ServerAPI(ctx);
     }
 
     @Override
@@ -238,6 +240,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     public void removeAt(int position) {
         db.deleteTask((int) mTask.get(position).getId());
+        serverAPI.removeTask(mTask.get(position).getId());
         mTask.remove(position);
         notifyItemRemoved(position);
     }
