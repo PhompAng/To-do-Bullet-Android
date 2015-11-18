@@ -20,12 +20,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -217,6 +220,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
                     break;
                 case 2:
                     dataset.set(position, new Task((int) dataset.get(position).getId(), title, Uri.parse(description), datetime, type));
+                    serverAPI.updateTask(title, Uri.parse(description), datetime, type, dataset.get(position).getId());
             }
 
         }
@@ -282,7 +286,7 @@ public class MainFragment extends Fragment implements TaskAdapter.ViewHolder.Cli
         long id = db.addTask(title, image.toString(), type, datetime);
         if (id != -1) {
             dataset.add(new Task(id, title, image, datetime, Task.TYPE_IMAGE));
-            //TODO multipart form
+            serverAPI.addTask(title, image, datetime, Task.TYPE_IMAGE, id);
         }
 
         mAdapter.notifyDataSetChanged();
