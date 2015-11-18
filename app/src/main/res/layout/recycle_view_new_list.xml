@@ -27,7 +27,7 @@
             android:layout_toEndOf="@+id/bullet"
             android:id="@+id/editText">
             <EditText android:id="@+id/new_task_list_list_item" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:hint="placeholder"
+                android:layout_height="wrap_content" android:hint="New Item"
                 android:inputType="text" android:maxLines="1"
                 android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
