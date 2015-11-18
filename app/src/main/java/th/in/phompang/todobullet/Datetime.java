@@ -56,7 +56,7 @@ public class Datetime {
     public void pickDate(int position) {
         Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
+        int month = c.get(Calendar.MONTH) + 1;
         int date = c.get(Calendar.DATE);
         switch (position) {
             case 0:
