@@ -33,7 +33,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         Intent intent = new Intent();
         intent.putExtra("year", year);
-        intent.putExtra("month", monthOfYear);
+        intent.putExtra("month", monthOfYear+1);
         intent.putExtra("date", dayOfMonth);
         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
     }
