@@ -91,7 +91,6 @@ public class GetTokenFragment extends Fragment {
             try {
                 JSONObject obj = new JSONObject(html);
                 access_token = obj.getString("access_token");
-                access_token = access_token.split("\\.")[1];
             } catch (JSONException e) {
                 access_token = "null";
             }
