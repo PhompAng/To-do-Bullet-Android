@@ -15,6 +15,7 @@
             android:id="@+id/logout"
             android:title="Logout" />
         <item
+            android:id="@+id/about"
             android:title="About" />
     </group>
 </menu>

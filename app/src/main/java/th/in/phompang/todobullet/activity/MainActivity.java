@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.util.HashMap;
 
 import th.in.phompang.todobullet.R;
+import th.in.phompang.todobullet.fragment.AboutFragment;
 import th.in.phompang.todobullet.fragment.GetTokenFragment;
 import th.in.phompang.todobullet.fragment.LoginFragment;
 import th.in.phompang.todobullet.fragment.MainFragment;
@@ -97,6 +98,9 @@ public class MainActivity extends AppCompatActivity {
         switch(menuItem.getItemId()) {
             case R.id.main:
                 fragmentClass = MainFragment.class;
+                break;
+            case R.id.about:
+                fragmentClass = AboutFragment.class;
                 break;
             case R.id.logout:
                 menuItem.setChecked(true);
