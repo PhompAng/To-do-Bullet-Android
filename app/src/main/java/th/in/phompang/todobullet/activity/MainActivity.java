@@ -18,10 +18,8 @@ import java.util.HashMap;
 
 import th.in.phompang.todobullet.R;
 import th.in.phompang.todobullet.fragment.AboutFragment;
-import th.in.phompang.todobullet.fragment.GetTokenFragment;
 import th.in.phompang.todobullet.fragment.LoginFragment;
 import th.in.phompang.todobullet.fragment.MainFragment;
-import th.in.phompang.todobullet.fragment.RegisterFragment;
 import th.in.phompang.todobullet.helper.SQLiteHandler;
 import th.in.phompang.todobullet.helper.SessionManager;
 
