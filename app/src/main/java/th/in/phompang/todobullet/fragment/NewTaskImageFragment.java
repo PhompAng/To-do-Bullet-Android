@@ -221,9 +221,6 @@ public class NewTaskImageFragment extends Fragment {
             case R.id.action_save:
                 validate();
                 return true;
-            case R.id.action_palette:
-                //TODO change task color
-                return true;
         }
 
         return super.onOptionsItemSelected(item);
