@@ -1,26 +1,36 @@
 package th.in.phompang.todobullet.activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 
 import th.in.phompang.todobullet.R;
+import th.in.phompang.todobullet.fragment.AboutFragment;
+import th.in.phompang.todobullet.fragment.LoginFragment;
+import th.in.phompang.todobullet.fragment.MainFragment;
 import th.in.phompang.todobullet.helper.SQLiteHandler;
 import th.in.phompang.todobullet.helper.SessionManager;
 
 public class MainActivity extends AppCompatActivity {
+
+    private DrawerLayout mDrawer;
+    private Toolbar toolbar;
+    private NavigationView nvDrawer;
+    private ActionBarDrawerToggle drawerToggle;
+    private TextView header;
+    private TextView email;
 
     private SQLiteHandler db;
     private SessionManager session;
@@ -31,72 +41,133 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        db = new SQLiteHandler(getApplicationContext());
-        session = new SessionManager(getApplicationContext());
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle = setupDrawerToggle();
+        mDrawer.setDrawerListener(drawerToggle);
 
-        if(!session.isLogin()) {
-            logoutUser();
+        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        setupDrawerContent(nvDrawer);
+
+        header = (TextView) findViewById(R.id.header);
+        email = (TextView) findViewById(R.id.email);
+
+        session = new SessionManager(this);
+        db = new SQLiteHandler(this);
+        updateHeader();
+
+        Bundle extra = getIntent().getExtras();
+        MainFragment mainFragment = MainFragment.newInstance();
+        if (extra != null) {
+            Bundle bundle = new Bundle();
+            bundle.putAll(extra);
+
+            mainFragment.setArguments(bundle);
         }
 
-        HashMap<String, String> user = db.getUserDeails();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, mainFragment).commit();
+    }
 
-        String name = user.get("name");
-        String email = user.get("email");
-        String token = user.get("token");
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+    }
 
-        TextView textView = (TextView) findViewById(R.id.text1);
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
+    }
 
-        textView.setText(token);
+    public void selectDrawerItem(MenuItem menuItem) {
+        // Create a new fragment and specify the planet to show based on
+        // position
+        Fragment fragment = null;
 
-        Button logoutBtn = (Button) findViewById(R.id.logout);
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        Class fragmentClass;
+        switch(menuItem.getItemId()) {
+            case R.id.main:
+                fragmentClass = MainFragment.class;
+                break;
+            case R.id.about:
+                fragmentClass = AboutFragment.class;
+                break;
+            case R.id.logout:
+                menuItem.setChecked(true);
+                mDrawer.closeDrawers();
                 logoutUser();
-            }
-        });
+                return;
+            default:
+                fragmentClass = MainFragment.class;
+        }
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+            fragment.setArguments(new Bundle());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+        menuItem.setChecked(true);
+        mDrawer.closeDrawers();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawer.openDrawer(GravityCompat.START);
+                return true;
+        }
+
+        return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggles
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     public void logoutUser() {
         session.setLogin(false);
 
         db.deleteUsers();
-        pref = getSharedPreferences("token", 0);
+        db.deleteTask();
+        pref = this.getSharedPreferences("token", 0);
         editor = pref.edit();
 
         editor.clear();
-        editor.commit();
+        editor.apply();
 
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, new LoginFragment().newInstance()).commit();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    public void updateHeader() {
+        HashMap<String, String> user = db.getUserDeails();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_gettoken) {
-            Intent gettoken = new Intent(this, GetTokenActivity.class);
-            startActivity(gettoken);
-            finish();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        header.setText(user.get("name"));
+        email.setText(user.get("email"));
     }
 }
